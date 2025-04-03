@@ -7,9 +7,9 @@ import (
 	"im/rpc_im/internal/svc"
 	"im/rpc_im/pb"
 
-	"github.com/golang/protobuf/proto"
 	"github.com/zeromicro/go-zero/core/collection"
 	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/protobuf/proto"
 )
 
 type PostMessageLogic struct {
