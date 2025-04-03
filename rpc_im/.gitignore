@@ -1,0 +1,6 @@
+/etc/
+/logs/
+/pb/
+/client/
+/server/
+go_build_*
