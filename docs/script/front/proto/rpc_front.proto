@@ -1,0 +1,1890 @@
+syntax = "proto3";
+option go_package = "./pb";
+
+package pb;
+
+// 导入汇付宝rpc服务
+import "rpc_front_heepay.proto";
+// 导入oms订单rpc服务
+import "rpc_front_oms.proto";
+// 导入pms商品rpc服务
+import "rpc_front_pms.proto";
+
+//--------------------------------活动表--------------------------------
+message Campaign {
+  int64 id = 1; //id
+  string phone = 2; //手机号
+  string username = 3; //用户名
+  int64 storeId = 4; //商户id
+  string storeName = 5; //商户名
+  string storeType = 6; //商户类型
+  string source = 7; //source
+  int64 createdAt = 8; //createdAt
+  int64 updatedAt = 9; //updatedAt
+}
+
+message AddCampaignReq {
+  string phone = 1; //手机号
+  string username = 2; //用户名
+  int64 storeId = 3; //商户id
+  string storeName = 4; //商户名
+  string storeType = 5; //商户类型
+  string source = 6; //source
+  int64 createdAt = 7; //createdAt
+  int64 updatedAt = 8; //updatedAt
+}
+
+message CampaignResp {
+  int64 id = 1;
+}
+
+message UpdateCampaignReq {
+  int64 id = 1; //id
+  string phone = 2; //手机号
+  string username = 3; //用户名
+  int64 storeId = 4; //商户id
+  string storeName = 5; //商户名
+  string storeType = 6; //商户类型
+  string source = 7; //source
+  int64 createdAt = 8; //createdAt
+  int64 updatedAt = 9; //updatedAt
+}
+
+message GetCampaignByIdReq {
+  int64 id = 1; //id
+}
+
+message GetCampaignResp {
+  Campaign info = 1; //campaign
+}
+
+message ListCampaignReq{
+  int64 page = 1;
+  int64 size = 2;
+  string params = 3;
+}
+message ListCampaignResp{
+  repeated Campaign list = 1;
+  int64 total = 2;
+}
+
+//--------------------------------订购表--------------------------------
+message OrderSubscription {
+  int64 id = 1; //id
+  string subNo = 2; //订购单号
+  string outSubNo = 3; //外部订购单号
+  int64 userId = 4; //用户id
+  string userNo = 5; //用户编号
+  string userName = 6; //用户名称
+  string phone = 7;
+  int64 productId = 8; //产品id
+  string productNo = 9; //产品编号
+  string productName = 10; //产品名称
+  string productType = 11; //
+  int64 customId = 12;
+  int64 storeId = 13; //商户id
+  string merchantPid = 14; //商户No
+  string merchantName = 15; //商户简称
+
+  int64 periods = 16; //periods
+  string subType = 17; //订购类型
+  double total = 18; //total
+  double downPayment = 19;
+  int64  downPaymentDate = 20;
+  int64 downPaymentPeriods = 21; //前N期金额期数
+
+  int64 deductionPeriod = 22; //扣款期数
+  double deductionAmount = 23; //已扣金额
+  string memo = 24; //备注
+
+  string subStatus = 25; //订购单状态
+  string subCancelType = 26; //正常取消 NORMAL 违约取消 DEFAULT
+  int64 postponeDays = 27; //延期天数
+  string deductionPlanList = 28; //扣款计划 date period amount status
+  int64 createdAt = 29; //创建时间
+  int64 updatedAt = 30; //更新时间
+  int64 activedAt = 31; //开通时间
+  int64 surrenderAt = 32; //解约时间
+  int64 surrenderBy = 33; //解约者
+  string referralCode = 34; //推荐码
+  int64 channelOrderType = 35; //渠道订单类型: 0-芝麻先享,1-安心付
+  string cardId = 36; //安心付售卖订单ID
+  int64 shopId = 37; //门店id
+  string shopNo = 38; //门店编号
+  string shopName = 39; //门店名称
+  double salePriceTotal = 45; //安心付售价总计(购买商品时的实际价格)
+  string merchantFullName = 46; //商户全称
+  int64 remainPeriods = 47; //安心付剩余期数remain_count(无论分期规则与每期状态多复杂，此字段表示还有多少期)
+  double usableCash = 48; //安心付订购单余额(无论分期规则与每期状态多复杂，此字段表示还有多少金额可以扣款)
+  double cancelledCash = 49; //安心付已解约金额/已取消金额
+  int64 source = 50; //订购单来源
+  string propertyId = 61; //一客一价id
+  int64 staffId = 51;
+  string staffName = 52;
+  double payOffAmount = 53; //线下还款金额统计【此数据包含在解约/取消中
+  int64 endTime = 54;
+}
+
+message CreateOrderSubscriptReq {
+
+  string outSubNo = 1; //外部订购单号
+  int64 userId = 2; //用户id
+  string userNo = 3; //用户编号
+  string userName = 4; //用户名称
+  string phone = 5;
+  int64 productId = 6; //产品id
+  string productNo = 7; //产品编号
+  string productName = 8; //产品名称
+  string productType = 9;
+  int64 storeId = 10; //商户id
+  string merchantPid = 11; //商户id
+  string merchantName = 12; //商户名称
+
+  int64 periods = 15; //periods
+  string subType = 16; //订购类型
+  double total = 17; //total
+  double downPayment = 18;
+  int64  downPaymentDate = 19;
+  int64 downPaymentPeriods = 20; //前N期金额期数
+  double deductionAmount = 21;
+  int64 deductedPeriod = 22;
+
+  string subStatus = 24; //订购单状态
+  int64 createdAt = 25; //创建时间
+  string referralCode = 26; //推荐码
+  int64 staffId = 27;
+  string staffName = 28;
+}
+
+message CreateOrderSubscriptV3Req{
+
+  string outSubNo = 1; //外部订购单号
+  int64 userId = 2; //用户id
+  string userNo = 3; //用户编号
+  string userName = 4; //用户名称
+  string phone = 5;
+  int64 productId = 6; //产品id
+  string productNo = 7; //产品编号
+  string productName = 8; //产品名称
+  string productType = 9;
+  int64 customId = 10; //自定义商品ID
+  int64 storeId = 11; //商户id
+  string merchantPid = 12; //商户id
+  string merchantName = 13; //商户名称
+
+  int64 periods = 15; //periods
+  string subType = 16; //订购类型
+  double total = 17; //total
+  double downPayment = 18;
+  int64  downPaymentDate = 19;
+  int64 downPaymentPeriods = 20; //前N期金额期数
+  double deductionAmount = 21;
+  int64 deductedPeriod = 22;
+
+  string subStatus = 24; //订购单状态
+  int64 createdAt = 25; //创建时间
+  string referralCode = 26; //推荐码
+}
+message CreateOrderSubscriptResp {
+  int64 id = 1; //id
+}
+
+message UpdateOrderSubscriptReq {
+  int64 id = 1; //id
+  string subNo = 2; //订购单号
+  string outSubNo = 3; //外部订购单号
+  string userNo = 4; //用户编号
+
+  double deductionAmount = 8; //已扣金额
+  int64 deductedPeriod = 9; //已扣期数
+
+  string subStatus = 10; //订购单状态
+  string subCancelType = 11; //正常取消 NORMAL 违约取消 DEFAULT
+  int64 postponeDays = 12; //延期天数
+  string deductionPlanList = 13; //扣款计划 date period amount status
+
+  int64 updatedAt = 15; //更新时间
+  int64 updatedBy = 16; //更新人
+  int64 activedAt = 17;
+}
+message UpdateOrderSubscriptMemoReq {
+  int64 id = 1; //id
+  string outSubNo = 2; //外部订购单号
+  string memo = 3; //备注
+  int64 updatedAt = 4; //更新时间
+  int64 updatedBy = 5; //更新人
+}
+message UpdateOrderSubscriptSubSurrenderReq{
+  int64 id = 1; //id
+  string outSubNo = 2; //外部订购单号
+  string subStatus = 3;
+  int64 updatedBy = 4; //更新人
+}
+message UpdateOrderSubscriptResp {
+  int64 id = 1; //id
+}
+
+message OrderSubscriptByIdReq {
+  int64 id = 1; //id
+  int64 uid = 2;
+  int64 storeId = 3;
+}
+message OrderSubscriptByOutSubNoReq {
+  string outSubNo = 1; //outSubNo
+}
+message SubscriptInfo {
+  OrderSubscription info = 1;
+}
+
+message OrderSubscriptListReq {
+  int64 page = 1;
+  int64 size = 2;
+  int64 msId = 3;
+  int64 uid = 4;
+  int64 storeId = 5;
+  string subStatus = 6;
+  string params = 7;
+}
+
+message OrderSubscriptByStoreIdReq{
+  int64 storeId = 1;
+  repeated string subStatus = 2;
+  int64 channelOrderType = 3;
+}
+
+message OrderSubscriptListResp {
+  repeated OrderSubscription list = 1;
+  int64 total = 2;
+  double sum = 3;
+  double salePriceTotal = 4;
+  double deductionAmountTotal = 5;
+  double cancelledCashTotal = 6;
+  double payOffAmountTotal = 7;
+  double surrenderSalePriceTotal = 8;
+}
+
+//message OrderSubs {
+//  OrderSubscription list = 1;
+//  Userinfo userinfo = 2;
+//}
+
+message GetAllOrderSubScriptReq {
+  string subStatus = 1;
+  int64 channel = 2;
+  int64 storeId = 3;
+  int64 staffId = 4;
+  int64 createMinAt = 5;
+  int64 createMaxAt = 6;
+}
+message GetAllOrderSubScriptResp {
+  repeated OrderSubscription list = 1;
+  int64 total = 2;
+}
+
+//message GetOrderSubscriptListReq {
+//  int64 page = 1;
+//  int64 size = 2;
+//  int64 uid = 3;
+//  int64 storeId = 4;
+//  string subStatus = 5;
+//}
+//message GetOrderSubscriptListResp {
+//  repeated OrderSubs list = 1;
+//  int64 total = 2;
+//}
+
+//--------------------------------结算表--------------------------------
+message OrderSettlement {
+  int64 id = 1; //id
+  string settleNo = 2; //结算单号
+  string orderNo = 3; //订单号
+  string subNo = 4; //订购单号
+  string merchantPid = 5; //商户id
+  string merchantName = 6; //商户名称
+  string status = 7; //分账状态
+  string details = 8; //分账明细
+  int64 failTimes = 9; //失败次数
+  string failReason = 10; //失败原因
+  int64 createdAt = 11; //创建时间
+  int64 updatedAt = 12; //更新时间
+}
+
+message CreateOrderSettlementReq {
+  string settleNo = 2; //结算单号
+  string orderNo = 3; //订单号
+  string subNo = 4; //订购单号
+  string merchantPid = 5; //商户id
+  string merchantName = 6; //商户名称
+  string status = 7; //分账状态
+  string details = 8; //分账明细
+  int64 failTimes = 9; //失败次数
+  string failReason = 10; //失败原因
+  int64 createdAt = 11; //创建时间
+}
+
+message UpdateOrderSettlementReq {
+  int64 id = 1; //id
+  string settleNo = 2; //结算单号
+  string orderNo = 3; //订单号
+  string subNo = 4; //订购单号
+  string merchantPid = 5; //商户id
+  string merchantName = 6; //商户名称
+  string status = 7; //分账状态
+  string details = 8; //分账明细
+  int64 failTimes = 9; //失败次数
+  string failReason = 10; //失败原因
+  int64 updatedAt = 11; //更新时间
+}
+
+message CreateOrderSettlementResp {
+  int64 id = 1;
+}
+
+message OrderSettleBySettleNoReq{
+  string settleNo = 1;
+}
+message OrderSettleBySettleNoResp{
+  OrderSettlement orderSettlement = 1;
+}
+
+
+//--------------------------------订单列表--------------------------------
+message OrderList {
+  int64 id = 1; //id
+  int64 channelOrderType = 2; //渠道订单类型: 0-芝麻先享,1-安心付
+  int64 source = 3; //订单来源: 0-支付宝安心付,1-安心付聚合,2-安心付独立小程序
+  string subOrderId = 4; //安心付分期单ID
+  string orderNo = 5; //芝麻(订单号)/安心付deduction_order_id(核销订单id)
+  string subNo = 6; //订购单号:芝麻/安心付(order_subscription.sub_no)
+  string outSubNo = 7; //芝麻/安心付(外部订购单号-YS系统内部生成)
+  int64 userId = 8; //用户id
+  string userNo = 9; //userNo
+  string userName = 10; //用户名称
+  string phone = 11; //手机号
+  int64 productId = 12; //商品ID
+  string productNo = 13; //产品编号
+  string productName = 14; //产品名称
+  int64 storeId = 15; //商户ID
+  string shopNo = 16; //门店编号
+  string shopName = 17; //门店名称
+  int64 staffId = 18; //员工id
+  string staffName = 19; //员工姓名
+  string merchantPid = 20; //商户NO
+  string merchantName = 21; //商户简称->store_info.license_name
+  string merchantFullName = 22; //商户全称->store_info.license_title
+  string status = 23; //芝麻(订单状态),安心付deduction_status(核销订单状态)->[已做字段映射，以映射的业务状态为准]
+  string subStatus = 24; //芝麻(订购单状态),安心付card_status(售卖订单状态映射):SUBSCRIBING-订购中,NORMAL-正常/履约中,END-已完结/履约完成,MANUAL_CANCEL-手动取消,SURRENDERING-解约中,SURRENDER-已解约,INVALID-已失效,INVALIDING-失效中,PAID-已支付,REFUND-已退款,TIMEOUT_SURRENDER-超时解约,PAUSED-已暂停
+  int64 period = 25; //芝麻/安心付(订单总期数)
+  double amount = 26; //芝麻(订单总金额)/安心付(订单原价总金额)
+  double salePriceTotal = 27; //安心付售价总计(购买商品时的实际价格)
+  double originalAmount = 28; //安心付本期原价金额
+  int64 deductionPeriod = 29; //芝麻/安心付(本期扣款期数)
+  int64 cumulatePeriod = 30; //芝麻/安心付(累计扣款成功期数)
+  double deductionAmount = 31; //芝麻/安心付(实际扣款金额期数累计)
+  double deductionCurrentAmount = 32; //芝麻/安心付(本期实际扣款金额)
+  int64 cancelPeriod = 33; //累计取消期数(不包含线下还款)
+  double cancelAmount = 34; //累计取消金额(不包含线下还款)
+  int64 dedutctionFailTimes = 35; //扣款失败次数
+  int64 dedutctionFailAt = 36; //扣款失败时间
+  string deductionFailReason = 37; //扣款失败原因
+  int64 planDeductedAt = 38; //计划扣款时间
+  int64 actualDeductedAt = 39; //实际扣款时间
+  int64 orderedAt = 40; //芝麻(下单时间)/安心付gmt_create(创建时间)
+  string settleStatus = 41; //芝麻(分账状态),安心付(暂时没有)
+  string payChannel = 42; //主动支付 APP 自动支付 AUTO
+  int64 createdAt = 43; //创建时间
+  int64 updatedAt = 44; //更新时间
+  double perAmount = 45; //芝麻/安心付(本期计划扣款金额)
+  int64 postponeDays = 46; //延期天数
+  int64 overdueDays = 47; //逾期天数
+  string overdueMemo = 48; //逾期备注
+  int64 overdueMemoId = 49; //逾期备注记录id
+  int64 overdueStatus = 50; //逾期备注状态: 0-空/未跟进,1-持续跟进,2-暂缓跟进,3-停止跟进
+  int64 updatedUid = 51; //修改数据用户uid
+  string referralCode = 52; //推荐码
+  string certificateSerial = 53; //安心付凭证序列号
+  string certificateId = 54; //安心付凭证id
+  string idempotentKey = 55; //订单幂等键-确保数据同步不被重复处理
+  string tradeNo = 56; //安心付订单交易号/流水号
+  double refundCash = 57; //退款金额
+  int64 shopId = 58; //门店id
+  int64 isOfflineRepayment = 59; //是否是线下还款
+}
+
+message FindOrderListDataByIdReq{
+  int64 id = 1; //id
+}
+
+message FindOrderListDataByIdResp{
+  OrderList orderListData = 1; // 订单列表数据
+}
+
+message UpdateOrderListDataReq {
+  OrderList orderListData = 1;
+}
+message UpdateOrderListDataResp {
+  int64 id = 1; //id
+}
+
+message CreateOrderListReq{
+  string orderNo = 2; //订单号
+  string subNo = 3; //订购单号
+  string outSubNo = 4;
+
+  int64 userId = 5; //用户id
+  string userNo = 6; //用户编号
+  string userName = 7; //用户名称
+  string phone = 8;
+
+  int64 productId = 9; //产品id
+  string productName = 10; //产品编号
+  string productNo = 11; //产品编号
+  int64 storeId = 12; //商户id
+  string merchantPid = 13; //商户id
+  string merchantName = 14; //商户名称
+  string merchantFullName = 15;
+  string status = 16; //订购单状态
+
+  int64 period = 20; //总周期
+  double amount = 21; //总金额
+  double salePriceTotal = 22; //售价总计
+  int64 deductionPeriod = 23; //扣款期数
+  double deductionAmount = 24; //扣款金额
+  int64 cumulatePeriod = 25; //累计期数
+
+  double originalAmount = 26;
+  //  double DeductedAmount = 27;
+  int64 postponeDays = 28;
+
+  int64 planDeductedAt = 29; //计划扣款时间
+  string settleStatus = 30; // 分账状态
+  int64 orderedAt = 31; //下单时间
+  string referralCode = 32; //推荐码
+  int64 staffId = 33;
+  string staffName = 34;
+}
+
+message BulkCreateOrderListReq {
+  repeated CreateOrderListReq list = 1;
+}
+
+message UpdateOrderListReq{
+  int64 id = 1;
+  string orderNo = 2; //订单号
+  string subNo = 3; //订购单号
+  string outSubNo = 4;//外部订购单号
+  string status = 5; //订购单状态
+  int64 storeId = 8; //商户id
+  string merchantPid = 9; //商户id
+
+  int64 deductedPeriod = 11; //每期期数
+  double deductionAmount = 12; //扣款金额
+  int64 cumulatePeriod = 13; //累计期数
+  //  string deductionStatus = 15;
+  int64 postponeDays = 16;
+  int64 overdueDays = 17;
+
+  int64 dedutctionFailTimes = 20; //扣款失败次数
+  string deductionFailReason = 21; //扣款失败原因
+  string settleStatus = 22; // 分账状态
+  string payChannel = 23; //付款渠道
+  int64 actualDeductedAt = 24; //实际扣款时间
+  int64 planDeductedAt = 25; //计划扣款时间
+}
+
+message UpdateOrderListOverDueReq{
+  string outSubNo = 1;//外部订购单号
+  int64 period = 2;
+  string status = 3; //订购单状态
+  int64 cumulatePeriod = 5; //累计期数
+  double deductionAmount = 6; //扣款金额
+}
+
+message CreateOrderListResp{
+  int64 id = 1;
+}
+
+message OrderListByIdReq{
+  int64 id = 1;
+  int64 uid = 2;
+  int64 storeId = 3;
+}
+message OrderListByOrderNoReq{
+  int64  uid = 1;
+  string orderNo = 2;
+  int64 storeId = 3;
+}
+message OrderListResp{
+  OrderList info = 1;
+}
+
+message OrderListRefundReq {
+  int64 id = 1;
+  int64 uid = 2;
+  int64 storeId = 3;
+  string orderNo = 4;
+}
+message OrderListRefundResp {
+  int64 id = 1;
+}
+
+message DeductionDataOrderListReq {
+  string outSubNo = 1;
+  string status = 2;
+  int64 period = 3;
+}
+message DeductionDataOrderListResp{
+  int64  period = 1;
+  double amount = 2;
+}
+
+message OrderListsReq{
+  int64 uid = 1;
+  int64 storeId = 2;
+}
+message OrderListByStatusReq{
+  string status = 1;
+  int64 channelOrderType = 2;
+}
+message OrderListBySettleStatusReq{
+  repeated string status = 1;
+  repeated string settleStatus = 2;
+}
+
+message OrderListByOutSubNoReq{
+  string outSubNo = 1;
+}
+
+message OrderListBySubNoReq {
+  int64 uid = 1;
+  int64 storeId = 2;
+  string subNo = 3;
+  string status = 4;
+}
+message OrderListByOutSubNoAndPeriodReq{
+  string outSubNo = 1;
+  int64 period = 2;
+}
+message OrderListBySubNoAndPeriodReq {
+  string subNo = 1;
+  int64 period = 2;
+}
+message OrderListByStoreIdReq{
+  int64 storeId = 1;
+  int64 channelOrderType = 2;
+}
+message OrderListByPlanDeductAtReq{
+  int64 minAt = 1;
+  int64 maxAt = 2;
+  repeated string status = 3;
+}
+
+message AdminGetOrderListBySubNoReq{
+  repeated string subNo = 1;
+}
+message OrderListsResp{
+  int64 total = 1;
+  repeated OrderList lists = 2;
+}
+
+//--------------------------------财务和逾期记录--------------------------------
+message FinancialListReq{
+  int64 page = 1;
+  int64 size = 2;
+  int64 msId = 3;
+  int64 storeId = 4;
+  int64 uid = 5;
+  string params = 6;
+  repeated string status = 7;
+}
+message FinancialListResp{
+  repeated OrderList lists = 1;
+  int64 total = 2;
+  double sum = 3;
+  double payOffAmountTotal = 4;
+}
+
+//--------------------------------sku表--------------------------------
+message Sku {
+  int64 id = 1; //SKU ID
+  string sn = 2; //sn
+  string title = 4; //title
+  string subTitle = 5; //subTitle
+  string desc = 6; //desc
+  int64 storeId = 7; //store ID
+  string storeName = 8; //storeName
+  string merchantPid = 9; //merchantPid
+  string shopId = 10; //门店id
+  int64 periods = 14; //periods
+  double amount = 15; //单价
+  double originalPrice = 16; //原单价
+  int64 deductionDays = 17; //指定扣款天数 7-1000
+  int64 allowSurrenderPeriods = 18; //允许解约期数
+  double total = 19; //商品现总价
+  string type = 20; //类型 MONTH WEEK DISCOUNT_MONTH DISCOUNT_WEEK
+  string status = 23; //PRODUCT_UP WAIT_UP PRODUCT_DOWN
+  int64 sort = 24; //sort
+  string attrs = 25; //销售属性值
+  string bannerUrl = 26; //banner图片 多个图片逗号分隔
+  string mainUrl = 27; //商品介绍主图 多个图片逗号分隔
+  double downPayment = 28; //前N期价格
+  int64 downPaymentDate = 29;
+  int64 downPaymentPeriods = 30; //前N期金额期数
+  string moreDiscount = 35; //是否越用越优惠 YES NO
+  string perPeriodPrice = 36; //每期价格信息
+  int64 createAt = 37; //创建时间
+  int64 updateAt = 38; // 
+  string payMethod = 39;
+  string qrUrl = 40; //推广二维码
+  string isEdit = 41;
+  string productType = 42;
+  int64 signTemplateId = 43; //签约模版id(ys_admin.store_applet_sign_template.id)
+  int64 channel = 44; //标注渠道:0-芝麻先享, 1-汇付宝/卡代扣
+  int64 ignoreDownPaymentDate = 45; //无视首次扣款日期(此功能仅汇付宝/卡代扣)可用:0-否, 1-是
+  string antMainClass = 46; //蚂蚁区块链专用字段-主类目
+  string antSubClass = 47; //蚂蚁区块链专用字段-子类目
+  int64 antProductVersion = 48; //蚂蚁区块链专用字段-商品版本
+  int64 antProductSyncVersion = 49; //蚂蚁区块链专用字段-商品同步版本
+  string referralCode = 50; //推荐码
+}
+
+message AddSkuReq {
+  string sn = 1; //sn
+  string title = 2; //title
+  string subTitle = 3; //subTitle
+  string desc = 4; //desc
+  int64 storeId = 7; //store ID
+  string storeName = 8; //storeName
+  string merchantPid = 9; //商家id
+  string shopId = 10; //门店id
+  int64 periods = 11; //periods
+  double amount = 12; //单价
+  double originalPrice = 13; //原单价
+  int64 deductionDays = 14; //指定扣款天数 7-1000
+  int64 allowSurrenderPeriods = 15; //允许解约期数
+  string productType = 16;
+
+  double total = 18; //商品现总价
+  string type = 19; //类型 MONTH WEEK DISCOUNT_MONTH DISCOUNT_WEEK
+  string status = 20; //PRODUCT_UP WAIT_UP PRODUCT_DOWN
+  int64 sort = 21; //sort
+  string attrs = 22; //销售属性值{attr_value_id}-{attr_value_id} 多个销售属性值逗号分隔
+  string bannerUrl = 23; //banner图片 多个图片逗号分隔
+  string mainUrl = 24; //商品介绍主图 多个图片逗号分隔
+  double downPayment = 25; //前N期价格
+  int64 downPaymentPeriods = 26; //前N期金额期数
+  int64 downPaymentDate = 27;
+  string moreDiscount = 28; //是否越用越优惠 YES NO
+  string perPeriodPrice = 29; //每期价格信息
+  int64 createAt = 30; //创建时间
+  int64 createBy = 31; //创建人
+  string payMethod = 32;
+  string isEdit = 33;
+  int64 signTemplateId = 34; //签约模版id(ys_admin.store_applet_sign_template.id)
+  int64 channel = 35; //标注渠道:0-芝麻先享, 1-汇付宝/卡代扣
+  int64 ignoreDownPaymentDate = 36; //无视首次扣款日期(此功能仅汇付宝/卡代扣)可用:0-否, 1-是
+  string antMainClass = 37; //蚂蚁区块链专用字段-主类目
+  string antSubClass = 38; //蚂蚁区块链专用字段-子类目
+  string referralCode = 39;
+}
+message AddSkuResp {
+  int64 id = 1;
+}
+
+message UpdateSkuReq {
+  int64 id = 1; //SKU ID
+  string title = 3; //title
+  string subTitle = 4; //subTitle
+  string desc = 5; //desc
+  string shopId = 6; //门店id
+  int64 periods = 7; //periods
+  double amount = 8; //单价
+  double originalPrice = 9; //原单价
+  int64 deductionDays = 10; //指定扣款天数 7-1000
+  int64 allowSurrenderPeriods = 11; //允许解约期数
+  double total = 12; //商品现总价
+  string type = 13; //类型 MONTH WEEK DISCOUNT_MONTH DISCOUNT_WEEK
+  string status = 14; //PRODUCT_UP WAIT_UP PRODUCT_DOWN
+  string productType = 15;
+  int64 sort = 18; //sort
+  string attrs = 19; //销售属性值{attr_value_id}-{attr_value_id} 多个销售属性值逗号分隔
+  string bannerUrl = 20; //banner图片 多个图片逗号分隔
+  string mainUrl = 21; //商品介绍主图 多个图片逗号分隔
+  double downPayment = 22; //前N期价格
+  int64 downPaymentPeriods = 23; //前N期金额期数
+  int64 downPaymentDate = 24;
+  string moreDiscount = 25; //是否越用越优惠 YES NO
+  string perPeriodPrice = 26; //每期价格信息
+  int64 updateAt = 28; //更新时间
+  int64 updateBy = 29; //修改人
+  string updateType = 30; //修改类型
+  string payMethod = 31;
+  string qrUrl = 32; //推广二维码
+  string isEdit = 33;
+  int64 signTemplateId = 34; //签约模版id(ys_admin.store_applet_sign_template.id)
+  int64 ignoreDownPaymentDate = 35; //无视首次扣款日期(此功能仅汇付宝/卡代扣)可用:0-否, 1-是
+  string antMainClass = 36; //蚂蚁区块链专用字段-主类目
+  string antSubClass = 37; //蚂蚁区块链专用字段-子类目
+  string referralCode = 38;
+}
+message UpdateSkuResp {
+  int64 id = 1;
+}
+
+message AntchainSyncSkuVersionReq{
+  int64 id = 1; //id
+}
+message AntchainSyncSkuVersionResp{}
+
+message SkuByIdReq {
+  int64 id = 1; //id
+  int64 storeId = 2;
+}
+message SkuBySnReq {
+  string sn = 1; //sn
+  int64 storeId = 2;
+}
+message SkuResp {
+  Sku sku = 1; //sku
+}
+
+message GetSkuByChannelStoreIdReq{
+  int64 storeId = 1; //
+  string productType = 2;
+  int64 page = 3; //页码
+  int64 size = 4; //每页条数
+  int64 channel = 5; // 渠道
+}
+message SkuByStoreIdReq{
+  int64 storeId = 1; //
+  string productType = 2;
+  int64 page = 3; //页码
+  int64 size = 4; //每页条数
+}
+message SkuListByIdsReq {
+  repeated int64 ids = 1; //sku id
+  int64 page = 2; //页码
+  int64 size = 3; //每页条数
+  int64 storeId = 4;
+}
+
+message SkuListReq {
+  int64 page = 1;
+  int64 size = 2;
+  int64 msId = 3;
+  string params = 4;
+  string productType = 5;
+}
+message SkuListResp {
+  repeated Sku skus = 1; //sku
+  int64 total = 2; //总条数
+}
+
+message ListSkuCustomBySnReq{
+  int64 page = 1;
+  int64 size = 2;
+  string sn = 3;
+  int64 status = 4;
+  string params = 5;
+  string source = 6;
+}
+message ListSkuCustomResp{
+  repeated SkuCustom list = 1; // sku custom
+  int64 total = 2;
+}
+
+//--------------------------------自定义商品表--------------------------------
+message SkuCustom {
+  int64 id = 1; //id
+  string sn = 2;
+  string title = 3; //sn
+  double total = 4; //total
+  double originalTotal = 5; //原价
+  int64 periods = 6; //periods
+  string memo = 7; //memo
+  double downPayment = 8; //downpayment
+  double amount = 9; //amount
+  int64 storeId = 10; //storeId
+  string storeName = 11; //storeName
+  int64 staffId = 12;
+  string staffName = 13;
+  int64 userId = 14; //userId
+  string username = 15; //username
+  string phone = 16; //phone
+  string cardPropertyId = 20; //卡属性id
+  string source = 21; //来源
+  int64 createAt = 22; //createAt
+  int64 updateAt = 23; //updateAt
+  string duliQrcode = 24; //聚合二维码
+  string juheQrcode = 25; //聚合二维码
+  int64 downPaymentPeriods = 26; //downPaymentPeriods
+  int64 status = 27; //0 false 1 true
+}
+
+message AddSkuCustomReq {
+  SkuCustom info = 1;
+}
+message UpdateSkuCustomReq {
+  SkuCustom info = 1;
+}
+message SkuCustomResp {
+  int64 id = 1;
+}
+
+message SkuCustomByIdReq {
+  int64 id = 1; //id
+}
+message GetSkuCustomByCardPropertyIdReq{
+  string cardPropertyId = 1;
+  int64 status = 2;
+}
+message SkuCustomInfoResp {
+  SkuCustom info = 1; //skuCustom
+}
+
+message SkuCustomBySnAndUserIdReq{
+  string sn = 1;
+  int64 userId = 2;
+}
+
+//--------------------------------消息表--------------------------------
+message UserMessage {
+  int64 id = 1; //id
+  int64 userId = 2; //userId
+  string userName = 3; //userName
+  int64 storeId = 4; //storeId
+  string storeName = 5; //storeName
+  string orderSn = 6;
+  string msgId = 7; //消息Id
+  string msgType = 8; //消息类型
+  string msgResp = 9; //消息响应
+  string mobile = 10; //手机号
+  string content = 11; //内容
+  string status = 12; //状态
+  string replyContent = 13; //回复消息
+  int64 createAt = 14; //createAt
+  int64 updateAt = 15; //updateAt
+}
+
+message AddUserMessageReq {
+  int64 userId = 1; //userId
+  string userName = 2; //userName
+  int64 storeId = 3; //storeId
+  string storeName = 4; //storeName
+  string msgId = 5; //消息Id
+  string orderSn = 6;
+  string msgType = 7; //消息类型
+  string msgResp = 8; //消息响应
+  string mobile = 9; //手机号
+  string content = 10; //内容
+  string status = 11; //状态
+  string replyContent = 12; //回复消息
+  int64 createAt = 13; //createAt
+}
+message AddUserMessageResp {
+  int64  id = 1;
+}
+
+message UpdateUserMessageReq {
+  int64 id = 1; //id
+  string msgId = 6; //消息Id
+  string msgType = 7; //消息类型
+  string msgResp = 8; //消息响应
+  string mobile = 9; //手机号
+  string content = 10; //内容
+  string status = 11; //状态
+  string replyContent = 12; //回复消息
+  int64 updateAt = 14; //updateAt
+}
+message UpdateUserMessageResp {
+  int64  id = 1;
+}
+
+message UserMessageListReq{
+  int64 page = 1;
+  int64 size = 2;
+  string params = 3;
+}
+message UserMessageListResp{
+  repeated UserMessage list = 1;
+  int64  total = 2;
+}
+
+message GetUserMessageByIdReq {
+  int64 id = 1; //id
+}
+message GetUserMessageByUserIdReq{
+  string orderSn = 1;
+  string MsgType = 2;
+  int64 userId = 3;
+}
+message GetUserMessageByStoreIdReq{
+  string orderSn = 1;
+  string MsgType = 2;
+  int64 storeId = 3;
+}
+
+message GetUserMessageResp {
+  UserMessage data = 1; //userMessage
+}
+
+//--------------------------------第三方用户信息--------------------------------
+message UserPlatform {
+  int64 id = 1;
+  int64 uid = 2;
+  string platformId = 3;
+  string platformToken = 4;
+  string platformType = 5;
+  string nickname = 6;
+  string avatar = 7;
+  string gender = 8;
+  int64 createAt = 9;
+  int64 updateAt = 10;
+  int64 msId = 11;
+}
+message UserPlatformByTokenReq{
+  string token = 1;
+  string type = 2;
+}
+message UserPlatformByTokenResp{
+  UserPlatform info = 1;
+}
+
+message UserPlatformByUidReq{
+  int64 uid = 1;
+}
+message UserPlatformByUidResp{
+  UserPlatform info = 1;
+}
+message UpdateUserTerminalReq{
+  int64 uid = 1;
+  int64 isUserTerminal = 2; //用户是否销户:0-否,1-是
+  int64 userTerminalAt = 3; //销户时间
+  int64 userTerminalCheckUid = 4; //销户核验人admin.uid
+  int64 userTerminalCheckAt = 5; //销户核验时间
+}
+message UpdateUserTerminalResp{
+  int64 id = 1;
+}
+
+//--------------------------------用户--------------------------------
+message UmsUser {
+  int64 id = 1; //账号id
+  string phone = 2; //手机号
+  string name = 3; //
+  string username = 4; //用户名
+  string password = 5; //密码
+  string email = 6; //邮箱
+  int64 createAt = 7; //创建时间
+  string createIpAt = 8; //创建ip
+  int64 updateAt = 9; //最后一次登录时间
+  string updateIpAt = 10; //最后一次登录ip
+  int64 loginTimes = 11; //登录次数
+  int64 msId = 12;
+  int64 isUserTerminal = 13; //用户是否销户:0-否,1-是
+  int64 userTerminalAt = 14; //销户时间
+  int64 userTerminalCheckUid = 15; //销户核验人admin.uid
+  int64 userTerminalCheckAt = 16; //销户核验时间
+}
+
+message FrontRegisterReq {
+  string phone = 1;
+  string password = 2;
+  string rePassword = 3;
+  string type = 4;
+  string token = 5;
+  string code = 6;
+  string createIp = 7;
+  int64 storeId = 8;
+  int64 msId = 9;
+}
+message FrontRegisterResp {
+  string AccessToken = 1;
+  int64 AccessExpire = 2;
+  int64 RefreshAfter = 3;
+}
+
+message FrontLoginReq {
+  string phone = 1;
+  string password = 2;
+  string type = 3;
+  string token = 4;
+  string code = 5;
+  string loginIp = 6;
+  int64 storeId = 7;
+  int64 msId = 8;
+}
+message LoginByTokenReq {
+  string userId = 1;
+  string openId = 2;
+  string type = 3;
+  string nickname = 4;
+  string avatar = 5;
+  string gender = 6;
+  string createIp = 7;
+  int64 storeId = 8;
+  string phone = 9;
+  int64 msId = 10;
+}
+
+message FrontLoginResp {
+  string AccessToken = 1;
+  int64 AccessExpire = 2;
+  int64 RefreshAfter = 3;
+  Userinfo Userinfo = 4;
+}
+
+message LoginByTokenV2Resp{
+  string AccessToken = 1;
+  int64 AccessExpire = 2;
+  string RefreshToken = 3;
+  int64 RefreshExpire = 4;
+  Userinfo Userinfo = 5;
+}
+
+message CmsLoginResp {
+  string AccessToken = 1;
+  int64 AccessExpire = 2;
+  string RefreshToken = 3;
+  int64 RefreshExpire = 4;
+  Userinfo Userinfo = 5;
+}
+
+message UserByIdReq{
+  int64 id = 1;
+}
+message UserByPhoneReq{
+  string phone = 1;
+}
+message UserByUserNoReq{
+  string userNo = 1;
+}
+message UmsUserResp{
+  UmsUser UmsUser = 1;
+}
+message UserUpdatePhoneReq{
+  int64 id = 1;
+  string phone = 2;
+}
+message UserUpdatePhoneResp{
+  int64 id = 1;
+}
+
+message FrontGenerateTokenReq{
+  int64 uid = 1;
+  int64 storeId = 2;
+  int64 msId = 3;
+}
+message FrontGenerateTokenResp{
+  string AccessToken = 1;
+  int64 AccessExpire = 2;
+  int64 RefreshAfter = 3;
+}
+
+message GenerateAccessTokenReq{
+  int64 uid = 1;
+  int64 storeId = 2;
+  int64 msId = 3;
+}
+message GenerateAccessTokenResp{
+  string AccessToken = 1;
+  int64 AccessExpire = 2;
+  string RefreshToken = 3;
+  int64 RefreshExpire = 4;
+}
+
+message RefreshAccessTokenReq{
+  string refreshToken = 1;
+  int64 msId = 2;
+}
+message RefreshAccessTokenResp{
+  string accessToken = 1;
+  int64 accessExpire = 2;
+  int64 userId = 3;
+}
+
+//--------------------------------账户信息--------------------------------
+message Userinfo {
+  int64 userId = 2; //账号id
+  string name = 3; //姓名
+  string nickname = 4; //昵称
+  string avatar = 5; //头像(相对路径)
+  string gender = 6; //性别
+  string phone = 7; //手机号
+  string cardNo = 8;
+  int64 createAt = 9; //创建时间
+}
+
+message UserInfoByUidReq {
+  int64 uid = 1;
+}
+message UserinfoResp{
+  Userinfo userinfo = 1;
+}
+
+message UserInfoByUserIdsReq {
+  repeated int64 uid = 1;
+}
+message UserinfoListResp {
+  repeated Userinfo userinfo = 1;
+}
+
+message UserinfoDetailReq{
+  int64 uid = 1;
+}
+message UserinfoDetailResp{
+  Userinfo Userinfo = 1;
+}
+
+message UserInfoUpdateReq{
+  int64 uid = 1;
+  string phone = 2;
+  string nickname = 4;
+  string avatar = 5;
+  string cardNo = 6;
+  string name = 7;
+}
+message UserInfoUpdateResp{
+  int64 id = 1;
+}
+message GetPlatformUserByTypeReq{
+  string platform_id = 1; // user_id
+  string platform_token = 2; // open_id
+}
+message GetPlatformUserByTypeResp{
+  UserPlatform userPlatform = 1;
+}
+message AddCommerceUserReq{
+  UserPlatform userPlatform = 1;
+}
+message AddCommerceUserResp{
+  int64 uid = 1;
+}
+
+//--------------------------------登录日志--------------------------------
+message UserLoginLog {
+  int64 id = 1; //id
+  int64 uid = 2; //uid
+  string ip = 4; //ip
+  string loginType = 5; //登录类型
+  int64 msId = 6; //系统ID
+  string token = 7; //token
+  int64 expiredAt = 8; //过期时间
+  int64 status = 9; //状态 1正常 0禁用
+  int64 createAt = 10; //createAt
+}
+
+message AddUserLoginLogReq {
+  int64 uid = 2; //uid
+  string ip = 4; //ip
+  string loginType = 5; //登录类型
+  int64 msId = 6; //系统ID
+  string token = 7; //token
+  int64 expiredAt = 8; //过期时间
+  int64 status = 9; //状态 1正常 0禁用
+  int64 createAt = 10; //createAt
+}
+message UserLoginLogResp {
+  int64 id = 1; //id
+}
+
+message Log {
+  int64 id = 1; //id
+  string action_id = 2; //
+  string action_type = 3; //动作
+  string entity_type = 4; //实体
+  string request = 5; //详情
+  string response = 6; //详情
+  int64 create_at = 7; //创建时间
+}
+
+message LogCreateReq{
+  string action_id = 2; //
+  string action_type = 3; //动作
+  string entity_type = 4; //实体
+  string request = 5; //详情
+  string response = 6; //详情
+  int64 create_at = 7; //创建时间
+}
+message LogCreateResp {
+  int64 id = 1; //id
+}
+message LogListReq {
+  int64 page = 1; //当前页
+  int64 size = 2; //每页条数
+  string params = 3;
+}
+message LogListResp {
+  repeated Log list = 1; //列表
+  int64 total = 2; //总条数
+}
+message LogByIdReq {
+  int64 id = 1;
+}
+message LogByIdResp{
+  Log log = 1;
+}
+
+//--------------------------------投诉与反馈信息表--------------------------------
+
+//意见反馈--查看意见反馈列表
+message Suggest{
+  int64 id = 1; //id
+  int64 msId = 2; //msId
+  int64 storeId = 3; //商户id(store.id)
+  string storeName = 4; //商户名称
+  string appId = 5; //小程序id
+  string appName = 6; //小程序名称
+  int64 suggestType = 7; //意见反馈类型:0-产品建议,1-问题反馈,2-其他
+  string content = 8; //反馈内容
+  string contact = 9; //联系方式
+  string name = 10; //姓名
+  string imagePath = 11; //图片路径:多张以逗号隔开
+  int64 createdAt = 12; //创建日期
+  int64 createdBy = 13; //创建人(front.uid)
+  int64 updatedAt = 14; //更新日期
+  int64 updatedBy = 15; //更新人(admin.uid)
+  int64 state = 16; //处理状态:0-未处理，1-已处理
+  string verifyInfo = 17; //处理核实内容信息
+  string verifyImagePath = 18; //处理核实内容图片:多张以逗号隔开
+  int64 userCount = 19; //用户次数
+}
+
+//意见反馈--添加意见反馈
+message SuggestAddReq{
+  int64 msId = 1;
+  int64 storeId = 2; //商户id(store.id)
+  string storeName = 3; //商户名称
+  string appId = 4; //小程序id
+  string appName = 5; //小程序名称
+  int64 suggestType = 6; //意见反馈类型:0-产品建议,1-问题反馈,2-其他
+  string content = 7; //反馈内容
+  string contact = 8; //联系方式
+  string name = 9; //姓名
+  string imagePath = 10; //图片路径:多张以逗号隔开
+  int64 userCount = 11;
+}
+message UpdateSuggestReq{
+  Suggest suggest = 1;
+}
+message SuggestResp{
+  int64 id = 1; //意见反馈编号
+}
+
+message GetSuggestByPhoneReq{
+  string phone = 1;
+}
+message SuggestListReq{
+  int64 page = 1; //page
+  int64 size = 2; //size
+  int64 msId = 3;
+  string params = 4; // 查询字段参数
+}
+message SuggestListResp{
+  repeated Suggest list = 1;
+  int64 total = 2;
+}
+
+message GetSuggestByIdReq{
+  int64 id = 1;
+}
+message GetSuggestResp{
+  Suggest info = 1;
+}
+
+//--------------------------------安心付投诉表--------------------------------
+message UserComplain {
+  int64 id = 1; //id
+  string targetId = 2; //目标ID
+  string targetType = 3; //目标类型
+  string eventId = 4; //事件 ID
+  string tradeNo = 5; //交易号
+  string outSubNo = 6; //订单号
+  int64 storeId = 7; //storeId
+  string storeName = 8; //storeName
+  string phone = 9; //用户手机号
+  string username = 10; //用户名
+  double tradeAmount = 11; //交易金额
+  string merchantOrderNo = 12; //商户订单号
+  string gmtCreate = 13; //gmtCreate
+  string gmtModified = 14; //gmtModified
+  string gmtFinished = 15; //gmtFinished
+  string categoryName = 16; //投诉类别
+  string complainReason = 17; //投诉理由
+  string status = 18; //状态
+  string complainStatus = 19; //状态
+  string content = 20; //投诉内容
+  int64 createAt = 21; //创建时间
+  int64 updateAt = 22; //更新时间
+}
+
+message AddUserComplainReq {
+  string targetId = 2; //目标ID
+  string targetType = 3; //目标类型
+  string eventId = 4; //事件 ID
+  string tradeNo = 5; //交易号
+  string outSubNo = 6; //订单号
+  int64 storeId = 7; //storeId
+  string storeName = 8; //storeName
+  string phone = 9; //用户手机号
+  string username = 10; //用户名
+  double tradeAmount = 11; //交易金额
+  string merchantOrderNo = 12; //商户订单号
+  string gmtCreate = 13; //gmtCreate
+  string gmtModified = 14; //gmtModified
+  string gmtFinished = 15; //gmtFinished
+  string categoryName = 16; //投诉类别
+  string complainReason = 17; //投诉理由
+  string status = 18; //状态
+  string complainStatus = 19; //状态
+  string content = 20; //投诉内容
+}
+message UpdateUserComplainReq {
+  int64 id = 1; //id
+
+  string gmtModified = 3; //投诉修改时间
+  string gmtFinished = 4; //投诉完成时间
+
+  double tradeAmount = 5; //交易金额
+  string merchantOrderNo = 6; //商户订单号
+  string status = 7; //状态
+  string complainStatus = 8; //状态
+  string content = 10; //投诉内容
+}
+message UserComplainResp {
+  int64 id = 1;
+}
+
+message BulkAddUserComplainReq {
+  repeated AddUserComplainReq list = 1;
+}
+message BulkUpdateUserComplainReq {
+  repeated UpdateUserComplainReq list = 1;
+}
+
+message GetUserComplainByStoreIdReq{
+  int64 storeId = 1;
+}
+message ListUserComplainReq{
+  int64 page = 1;
+  int64 size = 2;
+  string params = 3;
+}
+message ListUserComplainResp{
+  int64 total = 1;
+  repeated UserComplain list = 2;
+}
+
+message GetUserComplainByIdReq {
+  int64 id = 1; //id
+}
+message GetUserComplainByEventIdReq{
+  string eventId = 1;
+}
+message GetUserComplainResp {
+  UserComplain info = 1; //userComplain
+}
+message GetUserComplainByStoreIdWithTimeReq{
+  int64 storeId = 1;
+  int64 startTime = 2;
+  int64 endTime = 3;
+}
+message GetUserComplainByStoreIdWithTimeResp{
+  int64 total = 1;
+}
+
+//--------------------------------投诉回复表--------------------------------
+message UserComplainReply {
+  int64 id = 1; //id
+  int64 complainId = 2; //投诉 ID
+  string replierName = 3; //姓名
+  string replierRole = 4; //角色
+  string gmtCreate = 5; //创建时间
+  string content = 6; //回复内容
+  int64 createAt = 7; //创建时间
+  int64 updateAt = 8; //更新时间
+}
+
+message AddUserComplainReplyReq {
+  int64 complainId = 1; //投诉 ID
+  string replierName = 2; //姓名
+  string replierRole = 3; //角色
+  string gmtCreate = 4; //创建时间
+  string content = 5; //回复内容
+  int64 createAt = 6; //创建时间
+}
+message UpdateUserComplainReplyReq {
+  int64 id = 1; //id
+  int64 complainId = 2; //投诉 ID
+  string content = 6; //回复内容
+  int64 updateAt = 8; //更新时间
+}
+message UserComplainReplyResp {
+  int64 id = 1;
+}
+
+message BulkAddUserComplainReplyReq{
+  repeated AddUserComplainReplyReq list = 1;
+}
+message BulkUpdateUserComplainReplyReq{
+  repeated UpdateUserComplainReplyReq list = 1;
+}
+
+message ListUserComplainReplyReq{
+  int64 page = 1;
+  int64 size = 2;
+  string params = 3;
+}
+message GetUserComplainReplyByComplainIdReq{
+  int64 complainId = 1;
+}
+message ListUserComplainReplyResp{
+  int64 total = 1;
+  repeated UserComplainReply list = 2;
+}
+
+message GetUserComplainReplyByIdReq {
+  int64 id = 1; //id
+}
+message GetUserComplainReplyResp {
+  UserComplainReply info = 1;
+}
+
+//--------------------------------投诉图片表--------------------------------
+message UserComplainImage {
+  int64 id = 1; //id
+  int64 complainId = 2; //投诉 ID
+  int64 replyId = 3; //replyId
+  string imagePath = 4; //图片地址
+  string imageName = 5; //图片名称
+  string mediaId = 6; //标识
+  int64 status = 7; //状态
+  int64 createAt = 8; //创建时间
+  int64 updateAt = 9; //更新时间
+}
+
+message AddUserComplainImageReq {
+  int64 complainId = 1; //投诉 ID
+  int64 replyId = 2; //replyId
+  string imagePath = 3; //图片地址
+  string imageName = 4; //图片名称
+  string mediaId = 5; //标识
+  int64 status = 6; //状态
+  int64 createAt = 7; //创建时间
+  int64 updateAt = 8; //更新时间
+}
+message UpdateUserComplainImageReq {
+  int64 id = 1; //id
+  int64 complainId = 2; //投诉 ID
+  int64 replyId = 3; //replyId
+  string imagePath = 4; //图片地址
+  string imageName = 5; //图片名称
+  string mediaId = 6; //标识
+  int64 status = 7; //状态
+  int64 updateAt = 9; //更新时间
+}
+message BulkAddUserComplainImageReq {
+  repeated AddUserComplainImageReq list = 1;
+}
+message BulkUpdateUserComplainImageReq {
+  repeated UpdateUserComplainImageReq list = 1;
+}
+message UserComplainImageResp {
+  int64 id = 1;
+}
+
+message GetUserComplainImageByIdReq {
+  int64 id = 1; //id
+}
+message GetUserComplainImageResp {
+  UserComplainImage info = 1; //userComplainImage
+}
+
+message GetUserComplainImageByComplainIdReq{
+  int64 complainId = 1;
+}
+message GetUserComplainImageByReplyIdReq{
+  int64 replyId = 1;
+}
+message ListUserComplainImageReq{
+  int64 page = 1;
+  int64 size = 2;
+  string params = 3;
+}
+message ListUserComplainImageResp{
+  repeated UserComplainImage list = 1;
+  int64 total = 2;
+}
+
+//--------------------------------用户投诉表--------------------------------
+message UserComplaint {
+  int64 id = 1; //id
+  int64 msId = 2; //ms_id
+  int64 userId = 3; //userId
+  string userName = 4; //userName
+  int64 storeId = 5; //storeId
+  string storeName = 6; //storeName
+  string complaintId = 7; //complaintId
+  string complaintName = 8; //complaintName
+  string complaintPhone = 9; //complaintPhone
+  string complaintType = 10; //投诉类型
+  string complaintStatus = 11; //投诉状态
+  string cardId = 12; //订购单ID
+  string imageUrlList = 13; //imageUrlList
+  string content = 14; //content
+  string replyContent = 15; //replyContent
+  string merchantReplyUrl = 16; //商户处理链接
+  string isvReplyUrl = 17; //服务商处理链接
+  int64 createdAt = 18; //createdAt
+  int64 updatedAt = 19; //updatedAt
+  int64 updatedBy = 20; //updatedBy
+}
+
+message AddUserComplaintReq {
+  int64 msId = 2; //ms_id
+  int64 userId = 3; //userId
+  string userName = 4; //userName
+  int64 storeId = 5; //storeId
+  string storeName = 6; //storeName
+  string complaintId = 7; //complaintId
+  string complaintName = 8; //complaintName
+  string complaintPhone = 9; //complaintPhone
+  string complaintType = 10; //投诉类型
+  string complaintStatus = 11; //投诉状态
+  string cardId = 12; //订购单ID
+  string imageUrlList = 13; //imageUrlList
+  string content = 14; //content
+  string replyContent = 15; //replyContent
+  string merchantReplyUrl = 16; //商户处理链接
+  string isvReplyUrl = 17; //服务商处理链接
+}
+
+message UpdateUserComplaintReq {
+  int64 id = 1; //id
+  int64 msId = 2; //ms_id
+  int64 userId = 3; //userId
+  string userName = 4; //userName
+  int64 storeId = 5; //storeId
+  string storeName = 6; //storeName
+  string complaintId = 7; //complaintId
+  string complaintName = 8; //complaintName
+  string complaintPhone = 9; //complaintPhone
+  string complaintType = 10; //投诉类型
+  string complaintStatus = 11; //投诉状态
+  string cardId = 12; //订购单ID
+  string imageUrlList = 13; //imageUrlList
+  string content = 14; //content
+  string replyContent = 15; //replyContent
+  string merchantReplyUrl = 16; //商户处理链接
+  string isvReplyUrl = 17; //服务商处理链接
+}
+message BulkAddUserComplaintReq{
+  repeated AddUserComplaintReq list = 1;
+}
+message BulkUpdateUserComplaintReq{
+  repeated UpdateUserComplaintReq list = 1;
+}
+
+message UserComplaintResp {
+  int64 id = 1; //id
+}
+
+message GetUserComplaintByIdReq {
+  int64 id = 1; //id
+}
+message GetUserComplaintResp {
+  UserComplaint info = 1;
+}
+message GetUserComplaintByComplaintIdsReq{
+  repeated int64 ComplaintId = 1;
+}
+message ListUserComplaintReq{
+  int64 page = 1;
+  int64 size = 2;
+  string params = 3;
+}
+message ListUserComplaintResp {
+  int64 total = 1;
+  repeated UserComplaint list = 2;
+}
+message GetUserComplaintByStoreIdWithTimeReq{
+  int64 storeId = 1;
+  int64 startTime = 2;
+  int64 endTime = 3;
+}
+message GetUserComplaintByStoreIdWithTimeResp{
+  int64 total = 1; // 投诉总数
+}
+
+//--------------------------------区块链用户签约合同信息表--------------------------------
+message UserAntchainSignContract {
+  int64 id = 1; //id
+  int64 storeId = 2; //商户id标识
+  string storeName = 3; //商户名称
+  string balanceOrderNo = 4; //余额变动订单号(系统生成)
+  double balance = 5; //用户签约消费(一次性扣，以预付费扣款余额变动为准)
+  int64 uid = 6; //用户id
+  string userName = 7; //用户名称
+  string userPhone = 8; //用户手机号
+  string idCard = 9; //身份证号码
+  string orderNo = 10; //order_antchain.order_no 区块链商品订单号【唯一】
+  int64 signTemplateId = 11; //签约模版id(admin.store_antchain_sign_template.id)
+  string signNo = 12; //签署合同单号
+  string url = 13; //合同签署链接
+  string shortUrl = 14; //合同签署短链接
+  string miniAppUrl = 15; //小程序签署
+  string downloadUrl = 16; //合同下载地址
+  string flowId = 17; //电子签署流程ID
+  string accountId = 18; //电子签署流程账户ID
+  string status = 19; //合同签署状态: DRAFT 草稿,SIGNING 签署中,FINISH 签署完成, UNDO 撤销,TERMINATE 终止,EXPIRE 过期,REJECTED 拒签,FINISH_ORDER 签署完成【订单生效】
+  int64 endTime = 20; //合同结束时间
+  int64 createTime = 21; //创建时间
+  int64 updateTime = 22; //更新时间
+}
+message AddUserAntchainSignContractReq{
+  UserAntchainSignContract signContract = 1;
+}
+message AddUserAntchainSignContractResp{
+  int64 id = 1; //id
+}
+message UpdateUserAntchainSignContractReq{
+  UserAntchainSignContract signContract = 1;
+}
+message UpdateUserAntchainSignContractResp{
+  int64 row = 1;
+}
+message GetUserAntchainSignContractByBalanceOrderNoReq{
+  string balanceOrderNo = 1;
+}
+message GetUserAntchainSignContractResp{
+  UserAntchainSignContract signContract = 1;
+}
+message GetUserAntchainSignContractByOrderNoReq{
+  string orderNo = 1;
+}
+message GetUserAntchainSignContractBySignNoReq{
+  string signNo = 1;
+}
+message ListUserAntchainSignContractReq{
+  int64 page = 1; // 页码
+  int64 size = 2; // 每页条数
+  string params = 3; // 查询参数
+}
+message ListUserAntchainSignContractResp{
+  int64 total = 1;
+  repeated UserAntchainSignContract list = 2;
+}
+
+// ------------------------------------
+// Rpc Func
+// ------------------------------------
+service front {
+
+  //-----------------------活动表-----------------------
+  rpc AddCampaign(AddCampaignReq) returns (CampaignResp);
+  rpc UpdateCampaign(UpdateCampaignReq) returns (CampaignResp);
+  rpc GetCampaignById(GetCampaignByIdReq) returns (GetCampaignResp);
+  rpc ListCampaign(ListCampaignReq) returns (ListCampaignResp);
+
+  //------------------------订购表-----------------------
+  rpc CreateOrderSubscript(CreateOrderSubscriptReq) returns (CreateOrderSubscriptResp);
+  rpc CreateOrderSubscriptV3(CreateOrderSubscriptV3Req) returns (CreateOrderSubscriptResp);
+  rpc UpdateOrderSubscript(UpdateOrderSubscriptReq) returns (UpdateOrderSubscriptResp);
+  rpc UpdateOrderSubscriptMemo(UpdateOrderSubscriptMemoReq) returns (UpdateOrderSubscriptResp);
+  rpc UpdateOrderSubscriptSubSurrender(UpdateOrderSubscriptSubSurrenderReq) returns (UpdateOrderSubscriptResp);
+  rpc GetOrderSubscriptById(OrderSubscriptByIdReq) returns (SubscriptInfo);
+  rpc GetOrderSubscriptByOutSubNo(OrderSubscriptByOutSubNoReq) returns (SubscriptInfo);
+  rpc GetAllOrderSubScript(GetAllOrderSubScriptReq) returns (GetAllOrderSubScriptResp);
+
+  rpc OrderSubscriptList(OrderSubscriptListReq) returns (OrderSubscriptListResp);
+  rpc AdminOrderSubscriptList(OrderSubscriptListReq) returns (OrderSubscriptListResp);
+  rpc AdminGetOrderSubscriptByStoreId(OrderSubscriptByStoreIdReq) returns (OrderSubscriptListResp);
+  //  rpc GetOrderSubScriptList(GetOrderSubscriptListReq) returns (GetOrderSubscriptListResp);
+
+  //-----------------------订单表------------------
+  rpc CreateOrderList(CreateOrderListReq) returns (CreateOrderListResp);
+  rpc BulkCreateOrderList(BulkCreateOrderListReq) returns (CreateOrderListResp);
+  rpc UpdateOrderList(UpdateOrderListReq) returns (CreateOrderListResp);
+  rpc UpdateOrderListPostpone(UpdateOrderListReq) returns (CreateOrderListResp);
+  rpc UpdateOrderListStatus(UpdateOrderListReq) returns (CreateOrderListResp);
+  rpc UpdateOrderListOverDue(UpdateOrderListOverDueReq) returns (CreateOrderListResp);
+
+  rpc GetOrderLists(OrderListsReq) returns (OrderListsResp);
+  rpc GetOrderListByStatus(OrderListByStatusReq) returns (OrderListsResp);
+  rpc GetOrderListBySettleStatus(OrderListBySettleStatusReq) returns (OrderListsResp);
+  rpc GetOrderListByOutSubNo(OrderListByOutSubNoReq) returns (OrderListsResp);
+  rpc GetOrderListById(OrderListByIdReq) returns (OrderListResp);
+  rpc GetOrderListByOrderNo(OrderListByOrderNoReq) returns (OrderListResp);
+  rpc GetOneOrderListBySubNo(OrderListBySubNoReq) returns (OrderListResp);
+  rpc GetOneOrderListByOutSubNo(OrderListByOutSubNoReq) returns (OrderListResp);
+  rpc GetOrderListBySubNoAndPeriod(OrderListBySubNoAndPeriodReq) returns (OrderListResp);
+  rpc GetOrderListByOutSubNoAndPeriod(OrderListByOutSubNoAndPeriodReq) returns (OrderListResp);
+  rpc GetUserOrderListByOrderNo(OrderListByOrderNoReq) returns (OrderListResp);
+  rpc GetOrderListBySubNo(OrderListBySubNoReq) returns (OrderListsResp);
+  rpc DeductionDataOrderList(DeductionDataOrderListReq) returns (DeductionDataOrderListResp);
+  rpc AdminGetOrderListByStoreId(OrderListByStoreIdReq) returns (OrderListsResp);
+  rpc AdminGetOrderListBySubNoMap(AdminGetOrderListBySubNoReq) returns (OrderListsResp);
+  rpc AdminGetOrderListByPlanDeductAt(OrderListByPlanDeductAtReq) returns(OrderListsResp);
+  rpc OrderListRefund(OrderListRefundReq) returns (OrderListRefundResp);
+
+  //-------------------财务和逾期记录--------------
+  rpc FinancialList(FinancialListReq) returns (FinancialListResp);
+
+  // 通过id查询订单列表数据
+  rpc FindOrderListDataById(FindOrderListDataByIdReq) returns (FindOrderListDataByIdResp);
+  // 更新订单列表数据
+  rpc UpdateOrderListData(UpdateOrderListDataReq) returns (UpdateOrderListDataResp);
+
+  //---------------------分账表----------------------
+  rpc CreateOrderSettlement(CreateOrderSettlementReq) returns (CreateOrderSettlementResp);
+  rpc UpdateOrderSettlement(UpdateOrderSettlementReq) returns (CreateOrderSettlementResp);
+  rpc GetOrderSettlementBySettleNo(OrderSettleBySettleNoReq) returns (OrderSettleBySettleNoResp);
+
+  //------------------------商品--------------------
+  rpc GetSkuById(SkuByIdReq) returns (SkuResp);
+  rpc GetSkuBySn(SkuBySnReq) returns (SkuResp);
+
+  // 获取渠道商户对应的sku
+  rpc GetSkuByChannelStoreId(GetSkuByChannelStoreIdReq) returns (SkuListResp);
+  // [该方法已弃用 - 请使用GetSkuByChannelStoreId]
+  //  rpc GetSkuByStoreId(SkuByStoreIdReq) returns (SkuListResp);
+  rpc GetSkuListByIds(SkuListByIdsReq) returns (SkuListResp);
+  rpc ListSku(SkuListReq) returns (SkuListResp);
+  rpc AdminListSku(SkuListReq) returns (SkuListResp);
+
+  rpc AddSku(AddSkuReq) returns (AddSkuResp);
+  rpc UpdateSku(UpdateSkuReq) returns (UpdateSkuResp);
+  // 同步蚂蚁区块链商品版本
+  rpc AntchainSyncSkuVersion(AntchainSyncSkuVersionReq) returns (AntchainSyncSkuVersionResp);
+
+  //-----------------------自定义商品表-----------------------
+  rpc AddSkuCustom(AddSkuCustomReq) returns (SkuCustomResp);
+  rpc UpdateSkuCustom(UpdateSkuCustomReq) returns (SkuCustomResp);
+  rpc GetSkuCustomById(SkuCustomByIdReq) returns (SkuCustomInfoResp);
+  rpc GetSkuCustomByCardPropertyId(GetSkuCustomByCardPropertyIdReq) returns (SkuCustomInfoResp);
+  rpc ListSkuCustomBySn(ListSkuCustomBySnReq) returns (ListSkuCustomResp);
+
+  //-----------------------消息表-----------------------
+  rpc AddUserMessage(AddUserMessageReq) returns (AddUserMessageResp);
+  rpc UpdateUserMessage(UpdateUserMessageReq) returns (UpdateUserMessageResp);
+  rpc UserMessageList(UserMessageListReq) returns (UserMessageListResp);
+  rpc GetUserMessageById(GetUserMessageByIdReq) returns (GetUserMessageResp);
+  rpc GetUserMessageByStoreId(GetUserMessageByStoreIdReq) returns (GetUserMessageResp);
+  rpc GetUserMessageByUserId(GetUserMessageByUserIdReq) returns (GetUserMessageResp);
+
+  //-----------------意见反馈--------------
+  rpc SuggestAdd(SuggestAddReq) returns (SuggestResp);
+  rpc SuggestList(SuggestListReq) returns (SuggestListResp);
+  rpc AdminSuggestList(SuggestListReq) returns (SuggestListResp);
+  rpc GetSuggestByPhone(GetSuggestByPhoneReq) returns (SuggestListResp);
+  rpc GetSuggestById(GetSuggestByIdReq) returns (GetSuggestResp);
+  rpc UpdateSuggest(UpdateSuggestReq) returns (SuggestResp);
+
+  //----------------日志-----------------
+  rpc LogCreate(LogCreateReq) returns (LogCreateResp);
+  rpc LogList(LogListReq) returns (LogListResp);
+  rpc GetLogById(LogByIdReq) returns (LogByIdResp);
+
+}
+
+service UmsService{
+
+  rpc Register(FrontRegisterReq) returns (FrontRegisterResp);
+  rpc Login(FrontLoginReq) returns (FrontLoginResp);
+  rpc LoginCms(FrontLoginReq) returns (CmsLoginResp);
+  rpc GenerateToken(FrontGenerateTokenReq) returns (FrontGenerateTokenResp);
+  rpc LoginByToken(LoginByTokenReq) returns (FrontLoginResp);
+  rpc LoginByTokenV2(LoginByTokenReq) returns (LoginByTokenV2Resp);
+  rpc WxLoginByTokenV2(LoginByTokenReq) returns (LoginByTokenV2Resp);
+  //  rpc LoginByAlipayToken(LoginByTokenReq) returns (CmsLoginResp);
+
+  //-----------------------登陆------------------------
+  rpc GenerateAccessToken(GenerateAccessTokenReq) returns (GenerateAccessTokenResp);
+  //  rpc RefreshAccessToken(RefreshAccessTokenReq) returns (RefreshAccessTokenResp);
+
+  rpc GenerateAccessTokenV2(GenerateAccessTokenReq) returns (GenerateAccessTokenResp);
+  rpc RefreshAccessTokenV2(RefreshAccessTokenReq) returns (RefreshAccessTokenResp);
+
+  rpc RefreshWxAccessToken(RefreshAccessTokenReq) returns (RefreshAccessTokenResp);
+
+  rpc GetUserById(UserByIdReq) returns (UmsUserResp);
+  rpc GetUserByPhone(UserByPhoneReq) returns (UmsUserResp);
+  rpc UpdateUserPhone(UserUpdatePhoneReq) returns (UserUpdatePhoneResp);
+  rpc GetUserByUserNo(UserByUserNoReq) returns (UmsUserResp);
+  rpc GetUserPlatformByToken(UserPlatformByTokenReq) returns (UserPlatformByTokenResp);
+  rpc GetUserPlatformByUid(UserPlatformByUidReq) returns (UserPlatformByUidResp);
+  //  更新用户注销信息
+  rpc UpdateUserTerminal(UpdateUserTerminalReq) returns (UpdateUserTerminalResp);
+
+  rpc GetUserInfoByUid(UserInfoByUidReq) returns (UserinfoResp);
+  rpc GetUserInfoByUserIds(UserInfoByUserIdsReq) returns (UserinfoListResp);
+  rpc UserinfoDetail(UserinfoDetailReq) returns (UserinfoDetailResp);
+  rpc UserinfoUpdate(UserInfoUpdateReq) returns (UserInfoUpdateResp);
+  // 非登录直接更新用户信息
+  rpc UserinfoUpdateNoLogin(UserInfoUpdateReq) returns (UserInfoUpdateResp);
+
+  // 查询平台的类型用户: user_id或open_id
+  rpc GetPlatformUserByType(GetPlatformUserByTypeReq) returns (GetPlatformUserByTypeResp);
+  // 添加安心付平台类型用户 - 安心付只有user_id或open_id 数据几乎没有，如需其他平台自行写RPC
+  rpc AddCommerceUser(AddCommerceUserReq) returns (AddCommerceUserResp);
+
+  //-----------------------登录日志-----------------------
+  rpc AddUserLoginLog(AddUserLoginLogReq) returns (UserLoginLogResp);
+
+  //-----------------------安心付投诉表-----------------------
+  rpc AddUserComplain(AddUserComplainReq) returns (UserComplainResp);
+  rpc BulkAddUserComplain(BulkAddUserComplainReq) returns (UserComplainResp);
+  rpc UpdateUserComplain(UpdateUserComplainReq) returns (UserComplainResp);
+  rpc BulkUpdateUserComplain(BulkUpdateUserComplainReq) returns (UserComplainResp);
+  rpc ListUserComplain(ListUserComplainReq) returns (ListUserComplainResp);
+  rpc GetUserComplainByStoreId(GetUserComplainByStoreIdReq) returns (ListUserComplainResp);
+  rpc GetUserComplainById(GetUserComplainByIdReq) returns (GetUserComplainResp);
+  rpc GetUserComplainByEventId(GetUserComplainByEventIdReq) returns (GetUserComplainResp);
+  // 查询商户指定日期内的投诉信息
+  rpc GetUserComplainByStoreIdWithTime(GetUserComplainByStoreIdWithTimeReq) returns (GetUserComplainByStoreIdWithTimeResp);
+
+  //-----------------------安心付投诉回复表-----------------------
+  rpc AddUserComplainReply(AddUserComplainReplyReq) returns (UserComplainReplyResp);
+  rpc BulkAddUserComplainReply(BulkAddUserComplainReplyReq) returns (UserComplainReplyResp);
+  rpc UpdateUserComplainReply(UpdateUserComplainReplyReq) returns (UserComplainReplyResp);
+  rpc BulkUpdateUserComplainReply(BulkUpdateUserComplainReplyReq) returns (UserComplainReplyResp);
+  rpc ListUserComplainReply(ListUserComplainReplyReq) returns (ListUserComplainReplyResp);
+  rpc GetUserComplainReplyById(GetUserComplainReplyByIdReq) returns (GetUserComplainReplyResp);
+  rpc GetUserComplainReplyByComplainId(GetUserComplainReplyByComplainIdReq) returns (ListUserComplainReplyResp);
+
+  //-----------------------投诉图片表-----------------------
+  rpc AddUserComplainImage(AddUserComplainImageReq) returns (UserComplainImageResp);
+  rpc BulkAddUserComplainImage(BulkAddUserComplainImageReq) returns (UserComplainImageResp);
+  rpc UpdateUserComplainImage(UpdateUserComplainImageReq) returns (UserComplainImageResp);
+  rpc BulkUpdateUserComplainImage(BulkUpdateUserComplainImageReq) returns (UserComplainImageResp);
+  rpc GetUserComplainImageById(GetUserComplainImageByIdReq) returns (GetUserComplainImageResp);
+
+  rpc ListUserComplainImage(ListUserComplainImageReq) returns (ListUserComplainImageResp);
+  rpc GetUserComplainImageByComplainId(GetUserComplainImageByComplainIdReq) returns (ListUserComplainImageResp);
+  rpc GetUserComplainImageByReplyId(GetUserComplainImageByReplyIdReq) returns (ListUserComplainImageResp);
+
+  //-----------------------用户投诉表-----------------------
+  rpc AddUserComplaint(AddUserComplaintReq) returns (UserComplaintResp);
+  rpc UpdateUserComplaint(UpdateUserComplaintReq) returns (UserComplaintResp);
+  rpc BulkAddUserComplaint(BulkAddUserComplaintReq) returns (UserComplaintResp);
+  rpc BulkUpdateUserComplaint(BulkUpdateUserComplaintReq) returns (UserComplaintResp);
+  rpc GetUserComplaintById(GetUserComplaintByIdReq) returns (GetUserComplaintResp);
+  rpc ListUserComplaint(ListUserComplaintReq) returns (ListUserComplaintResp);
+  rpc GetUserComplaintByComplaintIds(GetUserComplaintByComplaintIdsReq) returns (ListUserComplaintResp);
+
+  //-----------------------区块链用户签约合同信息表-----------------------
+  // 添加蚂蚁区块链用户签约合同信息
+  rpc AddUserAntchainSignContract(AddUserAntchainSignContractReq) returns (AddUserAntchainSignContractResp);
+  // 更新蚂蚁区块链用户签约合同信息
+  rpc UpdateUserAntchainSignContract(UpdateUserAntchainSignContractReq) returns (UpdateUserAntchainSignContractResp);
+  // 通过balanceOrderNo查询蚂蚁区块链用户签约合同信息
+  //  rpc GetUserAntchainSignContractByBalanceOrderNo(GetUserAntchainSignContractByBalanceOrderNoReq) returns (GetUserAntchainSignContractResp);
+  // 通过orderNo 查询蚂蚁区块链用户签约合同信息
+  rpc GetUserAntchainSignContractByOrderNo(GetUserAntchainSignContractByOrderNoReq) returns (GetUserAntchainSignContractResp);
+  // 通过signNo 查询蚂蚁区块链用户签约合同信息
+  rpc GetUserAntchainSignContractBySignNo(GetUserAntchainSignContractBySignNoReq) returns (GetUserAntchainSignContractResp);
+  // 查询区块链用户签约合同列表
+  rpc ListUserAntchainSignContract(ListUserAntchainSignContractReq) returns (ListUserAntchainSignContractResp);
+
+}
+

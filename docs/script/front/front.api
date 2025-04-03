@@ -1,0 +1,58 @@
+syntax = "v1"
+
+info (
+	title:   "Yusheng"
+	desc:    "Yusheng project"
+	author:  "feng003"
+	email:   "zhb319907@163.com"
+	version: "v1"
+)
+
+import "api/ams.api"
+import "api/ums.api"
+import "api/oms.api"
+import "api/oms_antchain.api"
+import "api/alipay.api"
+import "api/wechat.api"
+import "api/upload.api"
+import "api/sign.api"
+import "api/heepay.api"
+import "api/commerce.api"
+import "api/pms.api"
+import "api/pms_antchain.api"
+import "api/cms.api"
+import "api/antchain_notify.api"
+
+type (
+	BillReq {
+		Method       string  `json:"method"`
+		TotalAmount  float64 `json:"total_amount"`
+		X            int64   `json:"x"`
+		Y            int64   `json:"y"`
+		FixedAmountX float64 `json:"fixedAmountX"`
+	}
+	BillResp {
+		SegmentedAmount []float64 `json:"segmentedAmount"`
+	}
+	LogsReq {
+		ActionId   string `json:"action_id,optional"`
+		ActionType string `json:"action_type,optional"` // 动作
+		EntityType string `json:"entity_type,optional"` // front
+		Request    string `json:"request,optional"`
+		Response   string `json:"response,optional"`
+	}
+	LogsResp {
+		Id int64 `json:"id"`
+	}
+)
+
+@server (
+	prefix: v1/common
+	group:  common
+)
+service front {
+	@doc "create logs"
+	@handler create
+	post /create (LogsReq) returns (LogsResp)
+}
+

@@ -1,0 +1,371 @@
+syntax = "v1"
+
+info(
+    title: "oms order and pms sku"
+    desc: "oms order and pms sku"
+    author: "feng003"
+    email: "zhb319907@163.com"
+    version: "v1/v2/v3"
+)
+
+type (
+    SkuInfo {
+        Id int64 `json:"id"`
+        Channel int64 `json:"channel"`       // 标注渠道:0-芝麻先享, 1-汇付宝/卡代扣
+        Sn string `json:"sn"`
+        Title string `json:"title"`
+        SubTitle string `json:"sub_title"`
+        Desc string `json:"desc"`
+        StoreId int64 `json:"store_id"`
+        StoreName string `json:"store_name"`
+        MerchantPid string `json:"merchant_pid"`
+        ShopId string `json:"shop_id"`
+        Periods int64 `json:"periods"`
+        Amount float64 `json:"amount"`
+        Total float64 `json:"total"`
+        OriginalPrice float64 `json:"original_price"`
+        DeductionDays int64 `json:"deduction_days"`
+        AllowSurrenderPeriods int64 `json:"allow_surrender_periods"`
+        Attrs []string `json:"attrs"`
+        Type string `json:"type"`
+        Status string `json:"status"`
+        Sorts string `json:"sorts"`
+        BannerUrl []string `json:"banner_url"`
+        MainUrl []string `json:"main_url"`
+        DownPayment string `json:"down_payment"`
+        DownPaymentDate string `json:"down_payment_date"`
+        DownPaymentPeriods string `json:"down_payment_periods"`
+        MoreDiscount string `json:"more_discount"`
+        PerPeriodPrice string `json:"per_period_price"`
+        CreateAt string `json:"create_at"`
+        IsEdit string `json:"is_edit"`
+
+        ProductType string `json:"product_type"`
+        Sections []Section `json:"sections"` //sections
+        AppName string `json:"app_name"`
+    }
+    Segment {
+        Title string `json:"title"`
+        Date string `json:"date"`
+        Price float64 `json:"price"`
+    }
+    Section {
+        Title string `json:"title"`
+        Price string `json:"price"`
+    }
+
+    ListByStoreIdReq {
+        Channel int64 `json:"channel,optional,default=0"` // 标注渠道:0-芝麻先享, 1-汇付宝/卡代扣
+        Page int64 `json:"page"`
+        Size int64 `json:"size"`
+        AppId string `json:"app_id"`
+        ProductType string `json:"product_type,optional"`
+    }
+    ListByStoreIdResp {
+        total int64 `json:"total"`
+        List []SkuInfo `json:"list"`
+    }
+
+    DetailByIdReq {
+        Id int64 `json:"id"`
+        AppId string `json:"app_id"`
+    }
+    Extend {
+        MerchantPid string `json:"merchant_pid"` //merchantPid
+        ShopId string `json:"shop_id"`           //shopId
+        ExtendParams string `json:"-"`           //extendParams
+    }
+    DetailByIdResp {
+        Sku SkuInfo `json:"sku"`
+        Segments []Segment `json:"segments"` //segements
+    }
+
+    DetailBySnReq {
+        Sn string `json:"sn"`
+        AppId string `json:"app_id"`
+        CustomId int64 `json:"custom_id,optional"`
+    }
+    DetailBySnResp {
+        Sku SkuInfo `json:"sku"`
+        Segments []Segment `json:"segments"`
+    }
+
+    CustomSkuReq {
+        Sn string `json:"sn"`
+        AppId string `json:"app_id"`
+        Total float64 `json:"total"`
+        Period int64 `json:"period"`
+        Memo string `json:"memo,optional"`
+    }
+    CustomSkuResp {
+        Id int64 `json:"id"`
+    }
+)
+
+@server(
+    middleware: CheckAuth
+    prefix: v1/pms
+    group: pms/pms
+)
+service front {
+    @doc "获取商品详情"
+    @handler details
+    post /details (DetailByIdReq) returns (DetailByIdResp)
+}
+
+@server(
+    prefix: v1/pms
+    group: pms/pms
+)
+service front {
+    @doc "获取商品列表[已弃用-请使用V3接口]"
+    @handler list
+    post /list (ListByStoreIdReq) returns (ListByStoreIdResp)
+}
+
+@server(
+    middleware: CheckAuth
+    prefix: v2/pms
+    group: pms/pmsV2
+)
+
+service front {
+    @doc "获取商品详情"
+    @handler detailsV2
+    post /details (DetailBySnReq) returns (DetailBySnResp)
+}
+
+@server(
+    middleware: CheckAuth
+    prefix: v3/pms
+    group: pms/pmsV3
+)
+service front {
+    @doc "提交自定义商品"
+    @handler customSku
+    post /customSku (CustomSkuReq) returns (CustomSkuResp)
+
+    @doc "获取商品详情v3"
+    @handler detailsV3
+    post /details (DetailBySnReq) returns (DetailBySnResp)
+}
+
+@server(
+    prefix: v3/pms
+    group: pms/pmsV3
+)
+service front {
+    @doc "获取商品列表"
+    @handler listV3
+    post /list (ListByStoreIdReq) returns (ListByStoreIdResp)
+}
+@server(
+    prefix: v4/pms
+    group: pms/pmsV4
+)
+service front {
+    @doc "非登录状态下获取商品详情v4"
+    @handler detailsV4
+    post /details (DetailBySnReq) returns (DetailBySnResp)
+}
+
+
+type (
+    PlanList {
+        Id int64 `json:"id"`
+        OrderNo string `json:"orderNo"`
+        Period int64 `json:"period"`
+        DeductionAmount float64 `json:"deductionAmount"`
+        DeductionDate string `json:"deductionDate"`
+        Status string `json:"status"`
+    }
+
+    Subscription {
+        Id int64 `json:"id"`
+        SubNo string `json:"sub_no"`
+        OutSubNo string `json:"out_sub_no"`
+        UserId int64 `json:"user_id"`
+        UserNo string `json:"user_no"`
+        UserName string `json:"user_name"`
+        UserPhone string `json:"user_phone"`
+        ProductNo string `json:"product_no"`
+        ProductName string `json:"product_name"`
+        ProductUrl string `json:"product_url"`
+        ProductType string `json:"product_type"`
+
+        MerchantPid string `json:"merchant_pid"`
+        MerchantName string `json:"merchant_name"`
+
+        Periods int64 `json:"periods"`
+        Total float64 `json:"total"`
+        DeductionAmount float64 `json:"deduction_amount"`
+        DeductionPeriod int64 `json:"deducted_period"`
+        DownPayment float64 `json:"down_payment"`
+        DownPaymentDate int64 `json:"down_payment_date"`
+        DownPaymentPeriods int64 `json:"down_payment_periods"`
+        SubStatus string `json:"sub_status"`
+        SubType string `json:"sub_type"`
+        SubCancelType string `json:"sub_cancel_type"`
+        PostponeDays int64 `json:"postpone_days"`
+        DeductionPlanList string `json:"deduction_plan_list"`
+        CreatedAt string `json:"created_at"`
+        Sections []Section `json:"sections"`
+    }
+
+    SubscriptionCreate {
+        AppId string `json:"app_id"`
+        OutSubNo string `json:"out_sub_no"`
+        ProductNo string `json:"product_no"`
+    }
+    SubscriptionCreateResp {
+        Id int64 `json:"id"`
+    }
+
+    SubscriptionCreateV2{
+       AppId string `json:"app_id"`
+       ProductNo string `json:"product_no"`
+    }
+    SubscriptionCreateV2Resp{
+        Id int64 `json:"id"`
+        OurSubNo string `json:"out_sub_no"`
+    }
+
+    SubscriptionCreateV3 {
+        AppId string `json:"app_id"`
+        ProductNo string `json:"product_no"`
+        CustomId int64 `json:"custom_id,optional"`
+        ReferralCode string `json:"referral_code,optional"`
+    }
+    SubscriptionCreateV3Resp {
+        Id int64 `json:"id"`
+        OurSubNo string `json:"out_sub_no"`
+    }
+
+    SubscriptionCreateV4 {
+        AppId string `json:"app_id"`
+        ProductNo string `json:"product_no"`
+        ReferralCode string `json:"referral_code,optional"`
+        CustomId int64 `json:"custom_id,optional"`
+    }
+    SubscriptionCreateV4Resp {
+        Id int64 `json:"id"`
+        OurSubNo string `json:"out_sub_no"`
+    }
+
+    VerifyCodeReq {
+    	MiniAppId     string `json:"mini_app_id"`
+    	MerchantAppId string `json:"merchant_app_id"`
+        ReferralCode string `json:"referral_code"`
+    }
+    VerifyCodeResp {
+        UserId int64 `json:"user_id"`
+        NickName string `json:"nick_name"`
+        Phone string `json:"phone"`
+    }
+
+    SubscriptionList {
+        MsId int64 `json:"ms_id"`
+        AppId string `json:"app_id"`
+        SubStatus string `json:"sub_status,optional"`
+        Page int64 `json:"page,optional"`
+        Size int64 `json:"size,optional"`
+    }
+    SubscriptionListResp {
+        Total int64 `json:"total"`
+        List []Subscription `json:"list"`
+    }
+
+    SubscriptionDetail {
+        Id int64 `json:"id"`
+        UserId int64 `json:"user_id,optional"`
+    }
+    SubscriptionDetailResp {
+        Sku SkuInfo `json:"sku"`
+        Detail Subscription `json:"detail"`
+        PlanLists []PlanList `json:"plan_lists"`
+    }
+    SubscriptionDetailV4 {
+        Id int64 `json:"id"`
+        UserId int64 `json:"user_id,optional"`
+    }
+    SubscriptionDetailV4Resp {
+        Sku SkuInfo `json:"sku"`
+        Detail Subscription `json:"detail"`
+        PlanLists []PlanList `json:"plan_lists"`
+    }
+
+    OrderListRefund {
+        Id int64 `json:"id,optional"`
+        OrderNo string `json:"order_no"`
+        UserId int64 `json:"user_id,optional"`
+    }
+    OrderListRefundResp {
+        Id int64 `json:"id"`
+    }
+)
+
+@server(
+    middleware: CheckAuth
+    prefix: v1/oms/subscript
+    group: oms/subscript
+    jwt: JwtAuth
+)
+service front {
+    @doc "生成订购单"
+    @handler createSubscript
+    post /create (SubscriptionCreate) returns (SubscriptionCreateResp)
+
+    @doc "订购单列表"
+    @handler listSubscript
+    post /list (SubscriptionList) returns (SubscriptionListResp)
+
+    @doc "获取订购单信息"
+    @handler detailSubscription
+    post /detail (SubscriptionDetail) returns (SubscriptionDetailResp)
+
+    @doc "订单退款"
+    @handler orderListRefund
+    post /refund (OrderListRefund) returns (OrderListRefundResp)
+}
+
+//@server (
+//    middleware: CheckAuth
+//    prefix: v2/oms/subscript
+//    group: oms/subscriptV2
+//)
+//service front {
+//
+//    @doc "生成订购单V2"
+//    @handler createSubscriptV2
+//    post /create (SubscriptionCreateV2) returns (SubscriptionCreateV2Resp)
+//}
+
+@server(
+    middleware: CheckAuth
+    prefix: v3/oms/subscript
+    group: oms/subscriptV3
+)
+service front {
+    @doc "生成订购单V3"
+    @handler createSubscriptV3
+    post /create (SubscriptionCreateV3) returns (SubscriptionCreateV3Resp)
+}
+
+@server(
+    middleware: CheckAuth
+    prefix: v4/oms/subscript
+    group: oms/subscriptV4
+)
+service front {
+    @doc "生成订购单V4"
+    @handler createSubscriptV4
+    post /create (SubscriptionCreateV4) returns (SubscriptionCreateV4Resp)
+
+    @doc "校验推荐码"
+    @handler verifyReferralCode
+    post /verifyCode (VerifyCodeReq) returns (VerifyCodeResp)
+
+    @doc "获取订购单信息"
+    @handler detailSubscriptionV4
+    post /detail (SubscriptionDetailV4) returns (SubscriptionDetailV4Resp)
+}

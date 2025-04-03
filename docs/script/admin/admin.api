@@ -1,0 +1,77 @@
+syntax = "v1"
+
+info (
+	title:   "Yusheng admin"
+	desc:    "Yusheng admin"
+	author:  "feng003"
+	email:   "zhb319907@163.com"
+	version: "v1"
+)
+
+import "ams/store.api"
+import "ams/store_applet.api"
+import "ams/store_shop.api"
+import "ams/auth_role.api"
+import "ams/auth_dept.api"
+import "ams/auth_ms_menu.api"
+import "ams/auth_user.api"
+import "ams/suggest.api"
+import "ams/heepay.api"
+import "ams/antchain.api"
+import "sys/alipay.api"
+import "sys/user.api"
+import "sys/order.api"
+import "sys/order_summary.api"
+import "sys/spi.api"
+import "sys/zft.api"
+import "sys/upload.api"
+import "sys/store_applet.api"
+import "sys/app.api"
+import "sys/heepay.api"
+import "sys/heepay_notify.api"
+import "sys/notify.api"
+import "sys/qrcode.api"
+import "sys/sys.api"
+import "sys/lms.api"
+import "sys/sku_commerce.api"
+import "sys/sku_antchain.api"
+import "sys/antchain.api"
+import "sys/order_antchain.api"
+import "cms/category.api"
+import "cms/tag.api"
+import "cms/apply.api"
+import "cms/job.api"
+import "cms/enterprise.api"
+import "cms/complaint.api"
+import "cms/im.api"
+import "cms/notice.api"
+
+type (
+	PreUserCreateReq {
+		MsId int64 `json:"ms_id"`
+	}
+	UserTypeNode {
+		Id    int64  `json:"id"`
+		Name  string `json:"name"`
+		Value string `json:"value"`
+	}
+	PreUserCreateResp {
+		UserType []*UserTypeNode `json:"user_type"`
+		UserList []*UserNode     `json:"user_list"`
+		DeptList []*DeptNode     `json:"dept_list"`
+		RoleList []*Role         `json:"role_list"`
+		ShopList []*StoreShop    `json:"shop_list"`
+	}
+)
+
+@server (
+	middleware: CheckAuth
+	prefix:     v1/store/user
+	group:      store/authUser
+)
+service admin {
+	@doc "前置添加用户"
+	@handler preCreateUser
+	post /preCreate (PreUserCreateReq) returns (PreUserCreateResp)
+}
+

@@ -1,0 +1,418 @@
+syntax = "v1"
+
+info(
+    title: "用户API"
+    desc: "注册 登录 第三方登录 信息更新"
+    author: "feng003"
+    email: "zhb319907@163.com"
+    version: "1.0"
+)
+
+type (
+    Userinfo {
+        Uid int64 `json:"uid"`
+        Name string `json:"name"`
+        Nickname string `json:"nickname"`
+        Avatar string `json:"avatar"`
+        Gender string `json:"gender"`
+        CardNo string `json:"card_no"`
+        Phone string `json:"phone"`
+    }
+
+    RegisterReq {
+        Phone string `json:"phone"`
+        Password string `json:"password"`
+        RePassword string `json:"re_password"`
+        Type string `json:"type"`
+        AppId string `json:"app_id"`
+        MsId int64 `json:"ms_id,optional"`
+    }
+    RegisterResp {
+        AccessToken string `json:"access_token"`
+        AccessExpire int64 `json:"access_expire"`
+        RefreshAfter int64 `json:"refresh_after"`
+    }
+
+    LoginReq {
+        Phone string `json:"phone"`
+        Password string `json:"password"`
+        Type string `json:"type"`
+        AppId string `json:"app_id"`
+        MsId int64 `json:"ms_id,optional"`
+    }
+    LoginResp {
+        AccessToken string `json:"access_token"`
+        AccessExpire int64 `json:"access_expire"`
+        RefreshAfter int64 `json:"refresh_after"`
+        Userinfo Userinfo `json:"userinfo"`
+    }
+
+    LoginCmsResp {
+        AccessToken string `json:"access_token"`
+        AccessExpire int64 `json:"access_expire"`
+        RefreshToken string `json:"refresh_token"`
+        RefreshExpire int64 `json:"refresh_expire"`
+        Userinfo Userinfo `json:"userinfo"`
+    }
+
+    WXMiniLoginReq {
+        Code string `json:"code"`
+        IV string `json:"iv"`
+        EncryptedData string `json:"encryptedData"`
+        AppId string `json:"app_id"`
+        MsId int64 `json:"ms_id,optional"`
+    }
+    WXMiniLoginResp {
+        AccessToken string `json:"accessToken"`
+        AccessExpire int64 `json:"accessExpire"`
+        RefreshToken string `json:"refresh_token"`
+        RefreshExpire int64 `json:"refresh_expire"`
+        Userinfo Userinfo `json:"userinfo"`
+    }
+    WXGetPhoneReq {
+        Code string `json:"code"`
+        AppId string `json:"app_id"`
+        MsId int64 `json:"ms_id,optional"`
+    }
+    WXGetPhoneResp {
+        Phone string `json:"phone"`
+        Msg string `json:"msg"`
+    }
+
+    AlipayLoginReq {
+        AppId string `json:"app_id,optional"`
+        MsId int64 `json:"ms_id,optional"`
+        Code string `json:"code"`
+    }
+    AlipayLoginByTokenReq {
+        AppId string `json:"app_id,optional"`
+        MsId int64 `json:"ms_id,optional"`
+        AuthCode string `json:"auth_code"`
+    }
+    AlipayYsLoginReq {
+        AppId string `json:"app_id,optional"`
+        MsId int64 `json:"ms_id,optional"`
+        Code string `json:"code"`
+        Type string `json:"type,optional"` //类型：1：美容mr，2：健身js 3：教育jj 4：宠物cw
+    }
+    AlipayYsLoginByTokenReq {
+        AppId string `json:"app_id,optional"`
+        MsId int64 `json:"ms_id,optional"`
+        AuthCode string `json:"auth_code"`
+        Type string `json:"type,optional"` //类型：1：美容mr，2：健身js 3：教育jj 4：宠物cw
+    }
+    AlipayLoginResp {
+        AccessToken string `json:"accessToken"`
+        AccessExpire int64 `json:"accessExpire"`
+        RefreshAfter int64 `json:"refreshAfter"`
+        Userinfo Userinfo `json:"userinfo"`
+    }
+
+    CommerceLoginReq {
+        AppId string `json:"app_id,optional"`
+        MsId int64 `json:"ms_id"`
+        AuthCode string `json:"auth_code"`
+        Type string `json:"type,optional"`
+    }
+
+    AlipayLoginV2Resp {
+        AccessToken string `json:"accessToken"`
+        AccessExpire int64 `json:"accessExpire"`
+        RefreshToken string `json:"refresh_token"`
+        RefreshExpire int64 `json:"refresh_expire"`
+        Userinfo Userinfo `json:"userinfo"`
+    }
+
+    CheckReq {
+        Token string `json:"token"`
+    }
+    CheckResp {
+        AccessExpire string `json:"access_expire"`
+    }
+
+    RefreshTokenReq {
+        MsId int64 `json:"ms_id"`
+        RefreshToken string `json:"refresh_token"`
+    }
+    RefreshTokenResp {
+        AccessToken string `json:"accessToken"`
+        AccessExpire int64 `json:"accessExpire"`
+    }
+
+    CampaignReq {
+        Phone string `json:"phone"`
+        UserName string `json:"user_name"`
+        StoreName string `json:"store_name"`
+        StoreType string `json:"store_type"`
+        Source string `json:"source"`
+    }
+    CampaignResp {
+        Id int64 `json:"id"`
+    }
+)
+@server(
+    prefix: v1/ums
+    group: ums/ums
+)
+
+service front {
+    @doc "注册"
+    @handler register
+    post /register (RegisterReq) returns (RegisterResp)
+
+    @doc "登录"
+    @handler login
+    post /login (LoginReq) returns (LoginResp)
+
+    @doc "Cms登录"
+    @handler loginCms
+    post /loginCms (LoginReq) returns (LoginCmsResp)
+
+    @doc "微信登录"
+    @handler wxminilogin
+    post /wxminilogin (WXMiniLoginReq) returns (WXMiniLoginResp)
+
+    @doc "支付宝授权手机登录"
+    @handler alipaylogin
+    post /alipaylogin (AlipayLoginReq) returns (AlipayLoginResp)
+
+    @doc "支付宝Code登录"
+    @handler alipayloginbytoken
+    post /alipayloginbytoken (AlipayLoginByTokenReq) returns (AlipayLoginResp)
+
+    @doc "支付宝授权手机登录V2"
+    @handler alipayloginV2
+    post /alipayloginV2 (AlipayLoginReq) returns (AlipayLoginV2Resp)
+
+    @doc "支付宝Code登录V2"
+    @handler alipayloginbytokenV2
+    post /alipayloginbytokenV2 (AlipayLoginByTokenReq) returns (AlipayLoginV2Resp)
+
+    @doc "支付宝Code登录V3【通用独立登录】"
+    @handler alipayloginbytokenV3
+    post /alipayloginbytokenV3 (AlipayLoginByTokenReq) returns (AlipayLoginV2Resp)
+
+
+    @doc "活动报名"
+    @handler campaign
+    post /campaign (CampaignReq) returns (CampaignResp)
+}
+
+@server(
+    middleware: CmsAuth
+    prefix: v1/ums
+    group: ums/ums
+)
+service front {
+    @doc "微信刷新token"
+    @handler refreshWxToken
+    post /refreshWx (RefreshTokenReq) returns (RefreshTokenResp)
+
+    @doc "微信code获取手机号"
+    @handler wxGetPhone
+    post /wxGetPhone (WXGetPhoneReq) returns (WXGetPhoneResp)
+}
+
+@server(
+    middleware: CheckAuth
+    prefix: v1/ums
+    group: ums/ums
+)
+service front {
+    @doc "支付宝独立刷新token"
+    @handler refreshAlipayDuli
+    post /refreshAlipayDuli (RefreshTokenReq) returns (RefreshTokenResp)
+
+    @doc "支付宝聚合刷新token"
+    @handler refreshAlipayJuhe
+    post /refreshAlipayJuhe (RefreshTokenReq) returns (RefreshTokenResp)
+}
+
+@server(
+    prefix: v1/mini
+    group: ums/mini
+)
+
+service front {
+    @doc "支付宝phone登录"
+    @handler minilogin
+    post /minilogin (AlipayLoginReq) returns (AlipayLoginResp)
+
+    @doc "支付宝token登录"
+    @handler miniloginbytoken
+    post /miniloginbytoken (AlipayLoginByTokenReq) returns (AlipayLoginResp)
+
+    @doc "支付宝刷新token"
+    @handler refreshAlipayToken
+    post /refresh (RefreshTokenReq) returns (RefreshTokenResp)
+
+    @doc "mini 行业登录"
+    @handler miniyslogin
+    post /miniyslogin (AlipayYsLoginReq) returns (AlipayLoginResp)
+
+    @doc "mini 行业token登录"
+    @handler miniysloginbytoken
+    post /miniysloginbytoken (AlipayYsLoginByTokenReq) returns (AlipayLoginResp)
+
+    @doc "安心付登录"
+    @handler commercelogin
+    post /commercelogin (AlipayYsLoginReq) returns (AlipayLoginResp)
+
+    @doc "安心付token登录"
+    @handler commerceloginbytoken
+    post /commerceloginbytoken (CommerceLoginReq) returns (AlipayLoginV2Resp)
+
+    @doc "区块链token登录【聚合】"
+    @handler antLoginByToken
+    post /antLoginByToken (CommerceLoginReq) returns (AlipayLoginV2Resp)
+
+    @doc "健身mini登录"
+    @handler minijslogin
+    post /minijslogin (AlipayLoginReq) returns (AlipayLoginResp)
+
+    @doc "健身mini token登录"
+    @handler minijsloginbytoken
+    post /minijsloginbytoken (AlipayLoginByTokenReq) returns (AlipayLoginResp)
+
+    @doc "美容mini登录"
+    @handler minimrlogin
+    post /minimrlogin (AlipayLoginReq) returns (AlipayLoginResp)
+
+    @doc "美容mini token登录"
+    @handler minimrloginbytoken
+    post /minimrloginbytoken (AlipayLoginByTokenReq) returns (AlipayLoginResp)
+}
+
+type (
+    UserInfoReq {
+        Uid int64 `json:"uid,optional"`
+    }
+    UserInfoResp {
+        Userinfo Userinfo `json:"userinfo"`
+    }
+
+    UserUpdateReq {
+        Uid int64 `json:"uid,optional"`
+        Nickname string `json:"nickname,optional"`
+        Avatar string `json:"avatar,optional"`
+        Gender string `json:"gender,optional"`
+        Name string `json:"name"`
+        CardNo string `json:"card_no"`
+        Phone string `json:"phone"`
+    }
+    UserUpdateResp {
+        id int64 `json:"id"`
+    }
+)
+
+@server(
+    middleware: CheckAuth
+    prefix: v1/ums/userinfo
+    group: ums/userinfo
+)
+
+service front {
+    @doc "获取用户信息"
+    @handler userinfoDetail
+    post /detail (UserInfoReq) returns (UserInfoResp)
+
+    @doc "用户信息更新"
+    @handler userinfoUpdate
+    post /update (UserUpdateReq) returns (UserUpdateResp)
+}
+
+type (
+    SuggestCreateReq {
+        MsId int64 `json:"ms_id,optional"`
+        AppId string `json:"app_id"`                  //小程序appid
+        SuggestType int64 `json:"suggest_type"`       //意见反馈类型：0产品建议，1：问题反馈，2其他
+        Content string `json:"content"`               //意见反馈内容
+        Name string `json:"name,optional"`            // 姓名
+        Contact string `json:"contact,optional"`      //联系方式
+        ImagePath string `json:"image_path,optional"` // 图片路径:多张以逗号隔开
+    }
+    SuggestCreateResp {
+        Id int64 `json:"id"`
+    }
+
+    Suggest {
+        Id int64 `json:"id"`                              //id
+        StoreId int64 `json:"store_id"`                   // 商户id
+        SuggestType int64 `json:"suggest_type"`           //意见反馈类型：0产品建议，1：问题反馈，2其他
+        Content string `json:"content"`                   //意见反馈内容
+        Contact string `json:"contact"`                   //联系方式
+        Name string `json:"name"`                         // 姓名
+        ImagePath string `json:"image_path"`              //图片路径:多张以逗号隔开
+        CreatedAt string `json:"created_at"`              //创建日期
+        UpdatedAt string `json:"updated_at"`              //更新日期
+        CreatedBy int64 `json:"created_by"`               //创建人
+        UpdatedBy int64 `json:"updated_by"`               //更新人
+        State int64 `json:"state"`                        //处理状态:0-未处理，1-已处理
+        VerifyInfo string `json:"verify_info"`            //处理核实内容信息
+        VerifyImagePath string `json:"verify_image_path"` //处理核实内容图片:多张以逗号隔开
+    }
+    MySuggestListReq {
+        MsId int64 `json:"ms_id,optional"`
+        Page int64 `json:"page,optional"`
+        Size int64 `json:"size,optional"`
+        Params string `json:"params,optional"` // 查询字段参数 - json字符串
+    }
+    MySuggestListResp {
+        List []Suggest `json:"list"`
+        Total int64 `json:"total"`
+    }
+)
+@server(
+    middleware: CheckAuth
+    prefix: v1/ams/suggest
+    group: ams/suggest
+)
+service front {
+    @doc "意见反馈"
+    @handler SuggestAdd
+    post /add (SuggestCreateReq) returns (SuggestCreateResp)
+
+    @doc "我的意见反馈列表"
+    @handler mySuggestList
+    post /mySuggestList (MySuggestListReq) returns (MySuggestListResp)
+}
+
+type (
+    TestReq {
+        ParamInt1 int64 `json:"param_int1,optional"`
+        ParamInt2 int64 `json:"param_int2,optional"`
+        ParamFloat float64 `json:"param_float,optional"`
+        ParamString string `json:"param_string,optional"`
+    }
+    TestResp{
+    }
+
+    NotifyResp {
+        Msg string `json:"msg"` //success fail
+    }
+
+    FrontTestReq {
+        Params string `json:"params,optional"` // 参数
+    }
+    FrontTestResp {
+        Msg string `json:"msg"` // 响应消息
+    }
+)
+
+@server(
+    prefix: v1/test
+    group: ums/test
+)
+service front {
+    @doc "测试"
+    @handler Test
+    post /test (TestReq) returns (TestResp)
+
+    @doc "front测试"
+    @handler FrontTest
+    post /frontTest (FrontTestReq) returns (FrontTestResp)
+
+    @doc "接收消息通知"
+    @handler Notify
+    post /notify returns (NotifyResp)
+}

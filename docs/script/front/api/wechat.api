@@ -1,0 +1,29 @@
+syntax = "v1"
+
+info(
+    title: "wechat"
+    desc: "wechat"
+    author: "feng003"
+    email: "email"
+    version: "v1"
+)
+
+type(
+    QiyeNotifyResp {
+       Msg string `json:"msg"`
+    }
+)
+
+@server (
+    prefix: v1/wechat
+    group: wechat/qiye
+)
+service front {
+    @doc "接受企业微信消息"
+    @handler notify
+    get /notify returns (QiyeNotifyResp)
+
+    @doc "部门管理"
+    @handler department
+    get /department returns (QiyeNotifyResp)
+}

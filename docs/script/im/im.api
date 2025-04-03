@@ -1,0 +1,9 @@
+syntax = "v1"
+
+info (
+	title:   "Yusheng im"
+	desc:    "Yusheng im"
+	author:  "feng003"
+	email:   "zhb319907@163.com"
+	version: "v1"
+)

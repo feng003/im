@@ -1,0 +1,113 @@
+syntax = "v1"
+
+info(
+    title: "commerce api"
+    desc: "sku commerce api"
+    author: "type author here"
+    email: "type email here"
+    version: "type version here"
+)
+
+type (
+    Category{
+        Id int64 `json:"id"`
+        Name string `json:"name"`
+        CatId int64 `json:"cat_id"`
+        ParentId int64 `json:"parent_id"`
+        Level int64 `json:"level"`
+        Status string `json:"status"`
+        ItemTypes string `json:"item_types"`
+    }
+    CategoryReq {
+        Category []Category `json:"category"`
+    }
+    CategoryResp{
+        Id int64 `json:"id"`
+    }
+
+    SkuCommerce{
+        Id int64 `json:"id"`
+        Sn string `json:"sn"`
+//        StoreId int64 `json:"store_id"`
+        StoreName string `json:"store_name"`
+        ShopName string `json:"shop_name"`
+        AppName string `json:"app_name"`
+        CardTemplateName string `json:"card_template_name"` // 卡名称
+        CardTemplateStatus string `json:"card_template_status"`
+        SettleType int64 `json:"settle_type"` // 结算方式
+        Hotline string `json:"hotline"` // 客服电话
+        Periods int64 `json:"periods"`  // 期数
+        SalePrice float64 `json:"sale_price"` // 售卖价格
+        OriginalPrice float64 `json:"original_price"` // 原价
+        UseInstruction string `json:"use_instruction"` // 使用说明
+        UsableCount int64 `json:"usable_count"` // 可用次数
+        CycleType string `json:"cycle_type"` // 周期类型
+        ImageIdList string `json:"image_id_list"`
+        ImageUrlList string `json:"image_url_list"`
+        StartAt string `json:"start_at"`
+        EndAt string `json:"end_at"`
+        Penalty float64 `json:"penalty"`
+        IsEdit string `json:"is_edit"`
+        PeriodOption string `json:"period_option"`
+    }
+    SkuCommercePriceList {
+        Id int64 `json:"id"`
+        SkuId int64 `json:"sku_id"`
+        Period int64 `json:"period"` // 期数
+        SalePrice float64 `json:"sale_price"` // 售卖价格
+        OriginalPrice float64 `json:"original_price"` // 原价
+        CardOpenTime string `json:"card_open_time"` // 开卡时间
+    }
+
+    SkuCommerceListReq {
+        MerchantAppId string `json:"merchant_app_id"`
+        ShopId int64 `json:"shop_id"`
+        Page int64 `json:"page,optional"`
+        Size int64 `json:"size,optional"`
+    }
+    SkuCommerceListResp {
+        total int64 `json:"total"`
+        List []SkuCommerce `json:"list"`
+    }
+
+    SkuCommerceDetailsReq {
+        Sn string `json:"sn"`
+        MiniAppId string `json:"mini_app_id"`
+        MerchantAppId string `json:"merchant_app_id"`
+    }
+    SkuCommerceSubDetailsReq{
+        CardPropertyId string `json:"card_property_id"`
+        MiniAppId string `json:"mini_app_id"`
+        MerchantAppId string `json:"merchant_app_id"`
+    }
+    SkuCommerceDetailsResp{
+        Info SkuCommerce `json:"info"`
+        IsReferralCode bool `json:"is_referralCode"`
+        PriceList []SkuCommercePriceList `json:"price_list"`
+    }
+
+
+)
+
+@server(
+    prefix: v1/pms/commerce
+    group: pms/commerce
+)
+service front {
+
+    @doc "添加商品分类详情"
+    @handler category
+    post /addCategory (CategoryReq) returns (CategoryResp)
+
+    @doc "获取安心付商品列表"
+    @handler list
+    post /list (SkuCommerceListReq) returns (SkuCommerceListResp)
+
+    @doc "获取安心付商品详情"
+    @handler details
+    post /details (SkuCommerceDetailsReq) returns (SkuCommerceDetailsResp)
+
+    @doc "获取安心付子商品详情"
+    @handler subDetails
+    post /subDetails (SkuCommerceSubDetailsReq) returns (SkuCommerceDetailsResp)
+}

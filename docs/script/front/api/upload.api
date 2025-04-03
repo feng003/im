@@ -1,0 +1,47 @@
+syntax = "v1"
+
+info(
+    title: "upload"
+    desc: "upload"
+    author: "feng003"
+    email: "type email here"
+    version: "v1"
+)
+
+type (
+    Upload {
+        Id      string `json:"id"`
+        Project string `json:"project"`
+        Module  string `json:"module"`
+        Type    string `json:"type"`
+        Prefix  string `json:"prefix"`
+    }
+
+    UploadFileResp {
+        OK  int    `json:"ok"`
+        Url string `json:"url"`
+    }
+
+    UploadBase64Resp {
+        OK  int    `json:"ok"`
+        Url string `json:"url"`
+    }
+)
+
+@server (
+    middleware: CheckAuth
+    prefix: v1/upload
+    group: upload
+    jwt: JwtAuth
+)
+
+service front {
+
+    @doc "upload file"
+    @handler UploadFile
+    post /file returns (UploadFileResp)
+
+    @doc "upload base64"
+    @handler UploadBase64
+    post /base64 returns (UploadBase64Resp)
+}

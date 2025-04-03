@@ -1,0 +1,299 @@
+syntax = "v1"
+
+info(
+    title: "cms"
+    desc: "cms api"
+    author: "feng003"
+    email: "email here"
+    version: "v1.0"
+)
+
+type (
+    CmsCategory {
+        Id int64 `json:"id"`
+        Name string `json:"name"`
+        Slug string `json:"slug"`
+        Sort int64 `json:"sort"`
+        ImagePath string `json:"image_path"`
+        Status string `json:"status"`
+    }
+    CmsHomeReq {}
+    CmsHomeResp {
+        Banner []string `json:"banner"`
+        Category []CmsCategory `json:"category"`
+    }
+
+    CmsTag {
+        Id int64 `json:"id"`
+        Name string `json:"name"`
+    }
+    Store {
+        Id int64 `json:"id"`
+        Name string `json:"name"`
+        Logo string `json:"logo"`
+    }
+    Notice{
+        Id int64 `json:"id"`
+        Title string `json:"title"`
+        Content string `json:"content"`
+    }
+    CmsJob {
+        Id int64 `json:"id"`
+        Sn string `json:"sn"`
+        Title string `json:"title"`
+        JobPrice string `json:"job_price"`
+        CategoryId int64 `json:"category_id"`
+        RecruitNum int64 `json:"recruit_num"`
+        ApplyNum int64 `json:"apply_num"`
+        Tag []CmsTag `json:"tag"`
+        Store Store `json:"store"`
+    }
+    // 分类 标签 地址
+    CmsLoadDataReq{
+        Page int64 `json:"page"`
+        Size int64 `json:"size"`
+        TagName string `json:"tag_name,optional"` // 标签
+        CategoryId int64 `json:"category_id,optional"` // 分类
+        Longitude float64 `json:"longitude,optional"`
+        Latitude float64 `json:"latitude,optional"` // 经纬度
+    }
+    CmsLoadDataResp {
+        List []CmsJob `json:"list"`
+        Total int64 `json:"total"`
+    }
+    CmsSearchReq {
+        Page int64 `json:"page,optional"`
+        Size int64 `json:"size,optional"`
+        Keyword string `json:"keyword"`
+    }
+    CmsSearchResp {
+        List []CmsJob `json:"list"`
+        Total int64 `json:"total"`
+    }
+
+    CmsJobDetail{
+        Id int64 `json:"id"`
+        Sn string `json:"sn"`
+        Title string `json:"title"`
+        JobPrice string `json:"job_price"`
+        JobType string `json:"job_type"`
+        ApplyType string `json:"apply_type"`
+        Requirements string `json:"requirements"`
+        Details string `json:"details"`
+        WorkDate int64 `json:"work_date"`
+        WorkTime string `json:"work_time"`
+        WorkLocation string `json:"work_location"`
+    }
+    CmsDetailsReq{
+        Sn string `json:"sn"`
+    }
+    CmsDetailsResp {
+        Info CmsJobDetail `json:"info"`
+        Tag []CmsTag `json:"tag"`
+        Store Store `json:"store"`
+        Notice Notice `json:"notice"`
+        Favorite bool `json:"favorite"`
+    }
+
+    CmsRecommendReq {
+        Page int64 `json:"page,optional"`
+        Size int64 `json:"size,optional"`
+        StoreId int64 `json:"store_id,optional"`
+        TagName string `json:"tag_name,optional"`
+        Keyword string `json:"keyword,optional"`
+    }
+    CmsRecommendResp {
+        List []CmsJob `json:"list"`
+        Total int64 `json:"total"`
+    }
+)
+
+@server(
+    prefix: v1/cms/home
+    group: cms/home
+)
+service front {
+    @doc "首页"
+    @handler home
+    post /home (CmsHomeReq) returns (CmsHomeResp)
+
+    @doc "加载数据"
+    @handler loadData
+    post /loadData (CmsLoadDataReq) returns (CmsLoadDataResp)
+
+    @doc "搜索"
+    @handler search
+    post /search (CmsSearchReq) returns (CmsSearchResp)
+}
+
+
+@server(
+    middleware: CmsAuth
+    prefix: v1/cms/home
+    group: cms/home
+)
+service front {
+
+    @doc "详情"
+    @handler details
+    post /details (CmsDetailsReq) returns (CmsDetailsResp)
+
+    @doc "推荐"
+    @handler recommend
+    post /recommend (CmsRecommendReq) returns (CmsRecommendResp)
+}
+type (
+    CmsApply{
+        Id int64 `json:"id"`
+        JobId int64 `json:"job_id"`
+        JobType string `json:"job_type"`
+        JobTitle string `json:"job_title"`
+        JobPrice string `json:"job_price"`
+        JobLocation string `json:"job_location"`
+        FullName string `json:"full_name"`
+        Phone string `json:"phone"`
+        ApplyDate int64 `json:"apply_date"`
+        Status string `json:"status"`
+        CreatedAt string `json:"created_at"`
+        UpdatedAt string `json:"updated_at"`
+        Store Store `json:"store"`
+    }
+    ApplyReq{
+        JobId int64 `json:"job_id"`
+        ApplyType string `json:"apply_type"` //
+        Phone string `json:"phone"`
+        FullName string `json:"full_name,optional"`
+        Wechat string `json:"wechat,optional"`
+        QqNumber string `json:"qq_number,optional"`
+        IsComputer int64 `json:"is_computer,optional"`
+    }
+    ApplyResp {
+        Id int64 `json:"id"`
+    }
+
+    ApplySuccessReq{
+        Id int64 `json:"id"` //报名成功id
+    }
+    ApplySuccessResp{
+        Phone string `json:"phone"`
+        QrCode string `json:"qr_code"`
+    }
+
+    ApplyCancelReq{
+        Id int64 `json:"id"`
+    }
+    ApplyListReq {
+        Page int64 `json:"page"`
+        Size int64 `json:"size"`
+        Status string `json:"status"`
+    }
+    ApplyListResp {
+        List []CmsApply `json:"list"`
+        Total int64 `json:"total"`
+    }
+    ApplyDetailReq{
+        Id int64 `json:"id"`
+        DetailType string `json:"detail_type"` //history favorite apply
+    }
+
+    CmsHistory{
+        Id int64 `json:"id"`
+        JobId int64 `json:"job_id"`
+        JobType string `json:"job_type"`
+        JobTitle string `json:"job_title"`
+        JobPrice string `json:"job_price"`
+        JobLocation string `json:"job_location"`
+        WorkLocation string `json:"work_location"`
+        CreatedAt string `json:"created_at"`
+        UpdatedAt string `json:"updated_at"`
+    }
+    CmsHistoryListReq{
+        Page int64 `json:"page"`
+        Size int64 `json:"size"`
+    }
+    CmsHistoryListResp{
+        List []CmsHistory `json:"list"`
+        Total int64 `json:"total"`
+    }
+
+    CmsFavoriteReq{
+        JobId int64 `json:"job_id"`
+        Status string `json:"status"` // ACTIVE INACTIVE
+    }
+    CmsFavoriteResp{
+        Id int64 `json:"id"`
+    }
+    CmsFavoriteListReq{
+        Page int64 `json:"page"`
+        Size int64 `json:"size"`
+    }
+    CmsFavorite{
+        Id int64 `json:"id"`
+        JobId int64 `json:"job_id"`
+        JobType string `json:"job_type"`
+        JobTitle string `json:"job_title"`
+        JobPrice string `json:"job_price"`
+        JobLocation string `json:"job_location"`
+        WorkLocation string `json:"work_location"`
+        CreatedAt string `json:"created_at"`
+        UpdatedAt string `json:"updated_at"`
+    }
+    CmsFavoriteListResp{
+        List []CmsFavorite `json:"list"`
+        Total int64 `json:"total"`
+    }
+
+    CmsComplaintReq{
+        ComplaintType string `json:"complaint_type"`
+        Title string `json:"title"`
+        Content string `json:"content"`
+        Phone string `json:"phone,optional"`
+        ImagePath string `json:"image_path,optional"`
+    }
+    CmsComplaintResp{
+        Id int64 `json:"id"`
+    }
+)
+@server(
+    middleware: CmsAuth
+    prefix: v1/cms/job
+    group: cms/job
+)
+service front {
+    @doc "报名"
+    @handler apply
+    post /apply (ApplyReq) returns (ApplyResp)
+
+    @doc "报名成功"
+    @handler success
+    post /success (ApplySuccessReq) returns (ApplySuccessResp)
+
+    @doc "取消报名"
+    @handler cancel
+    post /cancel (ApplyCancelReq) returns (ApplyResp)
+
+    @doc "报名列表"
+    @handler applyList
+    post /list (ApplyListReq) returns (ApplyListResp)
+
+    @doc "详情"
+    @handler applyDetail
+    post /detail (ApplyDetailReq) returns (CmsDetailsResp)
+
+    @doc "浏览列表"
+    @handler historyList
+    post /historyList (CmsHistoryListReq) returns (CmsHistoryListResp)
+
+    @doc "收藏"
+    @handler favorite
+    post /favorite (CmsFavoriteReq) returns (CmsFavoriteResp)
+
+    @doc "收藏列表"
+    @handler favoriteList
+    post /favoriteList (CmsFavoriteListReq) returns (CmsFavoriteListResp)
+
+    @doc "投诉"
+    @handler complaint
+    post /complaint (CmsComplaintReq) returns (CmsComplaintResp)
+}
+
